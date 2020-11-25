@@ -19,6 +19,9 @@ DerivedData
 *.hmap
 *.ipa
 
+# xcworkspace
+*.xcworkspace
+
 # Bundler
 .bundle
 
@@ -35,3 +38,5 @@ Carthage/Build
 # `pod install` in .travis.yml
 #
 # Pods/
+Pods/
+Podfile.lock
