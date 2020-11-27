@@ -1,5 +1,5 @@
 //
-//  NSString+MessageDigest.h
+//  NSString+YPMessageDigest.h
 //  YPDemo
 //
 //  Created by Peng on 2018/5/17.
@@ -10,13 +10,14 @@
 
 @interface NSString (yp_MD5)
 
-+ (NSString *)md5:(NSString *)string;
++ (NSString *)yp_md5:(NSString *)string;
 - (NSString *)yp_md5;
 
 @end
 
 @interface NSString (yp_MD_deprecate_1_0)
 
++ (NSString *)md5:(NSString *)string;
 - (NSString *)md5;
 
 @end

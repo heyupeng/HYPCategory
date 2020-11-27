@@ -12,13 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSData (YPHexString)
 
-/*
+/**
  16进制字符串转数据流 @"03000c0004000643" => <03000c00 04000643>
  0.57 sec / 100,000
  */
 + (NSData *)yp_dataWithHexString:(NSString *)hexString;
 
-/*
+/**
  数据流转16进制字符串 <03000c00 04000643> => @"03000c0004000643"
  */
 - (NSString *)yp_hexString;
@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSArray<NSNumber *> *)yp_bytes;
 
-/*
+/**
  数据流转数字 <0643> => 1603
  */
 - (NSInteger)yp_hexIntegerValue;

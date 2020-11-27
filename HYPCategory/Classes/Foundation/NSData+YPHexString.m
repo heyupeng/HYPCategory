@@ -38,16 +38,19 @@
     return mdata;
 }
 
+- (NSString *)yp_hexStringByDescription {
+    NSString * string = self.debugDescription;// data.description;
+    // 去除 <>
+    string = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    // 去除 space
+    string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
+    return string;
+}
 
 /**
- way 1:
-     NSString * string = data.description; // iOS 13 data.description 输出有变，不可用，data.debugDescription代替
-     // 去除 <>
-     string = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-     // 去除 space
-     string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
-     return string;
+ 数据流转16进制字符串 <03000c00 04000643> => @"03000c0004000643"
  
+ iOS 13 data.description 输出结果有变化，通过data.description 去除修边字符"<>" 与间隔字符" " 获取hexString 的方法不再适用。或可使用data.debugDescription 代替data.description。
  */
 - (NSString *)yp_hexString {
     Byte * bytes = (Byte *)[self bytes];
@@ -63,6 +66,9 @@
     return hexString;
 }
 
+/**
+ 数据流转ascii字符串 <313233 343561 626364> => 12345abcd
+ */
 - (NSString *)yp_ASCIIString {
 //    return [[NSString alloc] initWithData:self encoding:NSASCIIStringEncoding];
     

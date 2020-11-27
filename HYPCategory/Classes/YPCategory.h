@@ -10,10 +10,13 @@
 #define YPCategory_h
 
 /* Foundation */
-#import <YPFoundation.h>
+#import "Foundation+YPExtension.h"
 
-/* UI */
-#import <YPUIKit.h>
+/* UIKit */
+#import "UIKit+YPExtension.h"
+
+/* CoreBluetooth */
+#import "CoreBluetooth+YPExtension.h"
 
 #import "CoreGraphics+YPExtension.h"
 

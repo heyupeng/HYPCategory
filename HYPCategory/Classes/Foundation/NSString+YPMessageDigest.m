@@ -11,7 +11,7 @@
 
 @implementation NSString (yp_MD5)
 
-+ (NSString *)md5: (NSString *)string {
++ (NSString *)y_md5: (NSString *)string {
     const char *cStr = [string UTF8String];
     unsigned char digest[CC_MD5_DIGEST_LENGTH];
     CC_MD5(cStr, (int)strlen(cStr), digest);
@@ -33,6 +33,9 @@
 
 @implementation NSString (yp_MD_deprecate_1_0)
 
++ (NSString *)md5:(NSString *)string {
+    return [self yp_md5: string];
+}
 - (NSString *)md5 {
     return [self yp_md5];
 }

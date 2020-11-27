@@ -1,24 +1,23 @@
 //
-//  YPFoundation.h
+//  Foundation+YPExtension.h
 //  YPDemo
 //
 //  Created by Peng on 2019/5/5.
 //  Copyright © 2019 heyupeng. All rights reserved.
 //
 
-#ifndef YPFoundation_h
-#define YPFoundation_h
+#ifndef Foundation_YPExtension_h
+#define Foundation_YPExtension_h
 
 /* Hex String */
 #import "NSString+YPHexString.h"
 #import "NSData+YPHexString.h"
 
 #import "NSString+YPMessageDigest.h"
-#import "NSArray+YPExtension.h"
+#import "NSString+YPNumberBaseConversion.h"
 
-#import "NSObject+YPClass.h"
-#import "NSObject+YPProperty.h"
+#import "NSArray+YPExtension.h"
 
 #import "NSDate+YPExtension.h"
 
-#endif /* YPFoundation_h */
+#endif /* Foundation_YPExtension_h */

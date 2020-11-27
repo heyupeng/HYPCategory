@@ -8,12 +8,12 @@
 
 #import "UIWebView+YPJSContext.h"
 
-NSString * const kUIWebViewJavaScriptContext = @"documentView.webView.mainFrame.javaScriptContext";
+NSString * const kUIWebViewJSContext = @"documentView.webView.mainFrame.javaScriptContext";
 
 @implementation UIWebView (YPJSContext)
 
 - (JSContext *)yp_jsContext {
-    JSContext * jscontext = [self valueForKeyPath:kUIWebViewJavaScriptContext];
+    JSContext * jscontext = [self valueForKeyPath:kUIWebViewJSContext];
     return jscontext;
 }
 
