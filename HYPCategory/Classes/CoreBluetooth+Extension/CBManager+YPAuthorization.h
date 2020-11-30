@@ -11,6 +11,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#ifndef DEBUGLog
+
+#ifdef DEBUG
+#define DEBUGLog(...) NSLog(__VA_ARGS__)
+#else
+#define DEBUGLog(...)
+#endif
+
+#endif
+
 @interface CBManager (yp_Authorization)
 
 #ifndef __IPHONE_13_0
@@ -26,7 +36,9 @@ typedef NS_ENUM(NSInteger, CBManagerAuthorization) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
 
+#ifdef DECLARE_ENUM_VALUE_STRING_TRANSFORMATION
 DECLARE_ENUM_VALUE_STRING_TRANSFORMATION(CBManagerAuthorization)
+#endif
 
 /// 对 CBManager.authorization 的低版本兼容
 + (CBManagerAuthorization)yp_authorization;

@@ -84,12 +84,14 @@ return str;\
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpartial-availability"
 
+#ifdef DEFINE_ENUM_VALUE_STRING_TRANSFORMATION_IMPL
 DEFINE_ENUM_VALUE_STRING_TRANSFORMATION_IMPL(CBManagerAuthorization,
                                              CBManagerAuthorizationNotDetermined,
                                              CBManagerAuthorizationRestricted,
                                              CBManagerAuthorizationDenied,
                                              CBManagerAuthorizationAllowedAlways
                                              );
+#endif
 
 //#define DECLARE_ENUM_CBManagerAuthorization(FUNC) \
 //FUNC(CBManagerAuthorizationNotDetermined)\
@@ -132,26 +134,28 @@ DEFINE_ENUM_VALUE_STRING_TRANSFORMATION_IMPL(CBManagerAuthorization,
 + (CBManagerAuthorization)yp_authorization {
 #ifdef __IPHONE_13_0
 //    NSString * systemVersion = [[UIDevice currentDevice] systemVersion];
-//    if ([systemVersion floatValue] >= 13.0) {
+//    if ([systemVersion floatValue] >= 13.0)
+    {
         CBManagerAuthorization authorization;
 #ifdef __IPHONE_13_1
-        NSLog(@"iPhone OS Version: >= 13.1");
+        DEBUGLog(@"iPhone OS Version: >= 13.1");
         authorization = [CBManager authorization];
 #else
-        NSLog(@"iPhone OS Version: = 13.0");
+        DEBUGLog(@"iPhone OS Version: = 13.0");
         authorization = [[CBCentralManager alloc] init].authorization;
 #endif
         NSString * str = NSStringFromCBManagerAuthorization(authorization);
         NSString *npstr = NSStringFromCBManagerAuthorizationWithoutPrefix(authorization);
-        NSLog(@"%@(%@) = %zi", str, npstr, authorization);
+        DEBUGLog(@"%@(%@) = %zi", str, npstr, authorization);
         return authorization;
-//    } else
+    }
+//        else
 #else
     {
-        NSLog(@"iPhone OS Version: < 13.0");
+        DEBUGLog(@"iPhone OS Version: < 13.0");
         CBPeripheralManagerAuthorizationStatus authorization = [CBPeripheralManager authorizationStatus];
         NSString * str = NSStringFromCBManagerAuthorization(authorization);
-        NSLog(@"%@ = %zi", str, authorization);
+        DEBUGLog(@"%@ = %zi", str, authorization);
         return authorization;
     }
 #endif
