@@ -9,7 +9,7 @@
 #ifndef CoreGraphics_YPExtension_h
 #define CoreGraphics_YPExtension_h
 
-#import "CGGeometryExtension.h"
+#import "CGGeometry+YPExtension.h"
 
 #import "CGContext+YPConicGradient.h"
 
