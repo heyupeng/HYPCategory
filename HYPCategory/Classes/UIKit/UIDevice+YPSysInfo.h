@@ -19,18 +19,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIDevice (yp_ModelName)
 
-/// 型号标识。
+/// 设备型号标识。
 - (NSString *)yp_modelIdentifier;
-/// 型号名称。
+
+/// 设备型号名称。
 - (NSString *)yp_modelName;
 
 @end
 
 @interface UIDevice (yp_Platform)
-/// 设备型号
-- (NSString *)deviceType;
 
-- (BOOL)isSimulator;
+/// 是否模拟器。
+- (BOOL)yp_isSimulator;
 
 @end
 

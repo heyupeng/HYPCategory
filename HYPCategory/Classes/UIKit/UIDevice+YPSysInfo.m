@@ -24,7 +24,7 @@
 /// 型号标识与型号名称映射:  https://www.theiphonewiki.com/wiki/Models#iPhone
 @implementation UIDevice (yp_ModelName)
 
-/// 型号标识。从 `utsname` 读取，模拟器从`NSProcessInfo`读取。
+/// 设备型号标识。从 `utsname` 读取，模拟器从`NSProcessInfo`读取。
 - (NSString *)yp_modelIdentifier {
     if (TARGET_OS_SIMULATOR) {
         NSProcessInfo * processInfo = [NSProcessInfo processInfo];
@@ -36,7 +36,7 @@
     return [self yp_machine];
 }
 
-/// 型号名称。
+/// 设备型号名称。
 - (NSString *)yp_modelName {
     static NSString * identifier;
     if (!identifier) {
@@ -221,11 +221,9 @@
 @end
 
 @implementation UIDevice (yp_Platform)
-- (NSString *)deviceType {
-    return [self yp_modelName];
-}
 
-- (BOOL)isSimulator {
+/// 是否模拟器。
+- (BOOL)yp_isSimulator {
     if (TARGET_OS_SIMULATOR) {
         return YES;
     }

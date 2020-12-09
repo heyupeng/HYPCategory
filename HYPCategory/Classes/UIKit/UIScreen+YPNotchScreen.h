@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 当前屏幕安全区域嵌入位。
 - (UIEdgeInsets)yp_safeAreaInsets;
 
+- (UIEdgeInsets)yp_safeAreaInsets1;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -13,7 +13,7 @@
 
 #import "UIDevice+YPSysInfo.h"
 
-#import "UIScreen+NotchScreen.h"
+#import "UIScreen+YPNotchScreen.h"
 
 #import "UIImage+YPResizableImage.h"
 
