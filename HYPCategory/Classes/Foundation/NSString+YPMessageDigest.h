@@ -15,9 +15,46 @@
 
 @end
 
-@interface NSString (yp_MD_deprecate_1_0)
 
-+ (NSString *)md5:(NSString *)string;
-- (NSString *)md5;
+@interface NSString (yp_SHA1)
+
++ (NSString *)yp_sha1: (NSString *)string;
+
+- (NSString *)yp_sha1;
+
+@end
+
+
+@interface NSString (yp_SHA224)
+
++ (NSString *)yp_sha224: (NSString *)string;
+
+- (NSString *)yp_sha224;
+@end
+
+
+@interface NSString (yp_SHA256)
+
++ (NSString *)yp_sha256: (NSString *)string;
+
+- (NSString *)yp_sha256;
+
+@end
+
+
+@interface NSString (yp_SHA384)
+
++ (NSString *)yp_sha384: (NSString *)string;
+
+- (NSString *)yp_sha384;
+
+@end
+
+
+@interface NSString (yp_SHA512)
+
++ (NSString *)yp_sha512: (NSString *)string;
+
+- (NSString *)yp_sha512;
 
 @end
