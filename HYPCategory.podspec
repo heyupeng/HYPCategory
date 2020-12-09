@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYPCategory'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'A short description of HYPCategory.'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,24 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+1. CoreBluetooth:
+  CBManager: iOS 13授权状态兼容；
+
+2. CoreGraphics:
+ Geometry: 增加 CGPoint, CGSize, CGRect 几何计算函数;
+ 
+3. Foundation:
+  NSArray: 无越界处理,
+  NSString: MD5编码, HexString, 数基转换（2、10、16进制）;
+  NSData: 数据流与16进制字符串的转换;
+  NSDate: 日期格式化的转换与输出, 日期组成零件;
+
+4. UIKit:
+  UIDevice: 型号识别;
+  UIImage: 图像截取, 图像叠加合并;
+  UIScreen: 缺口屏判断;
+  UIApplication: iOS 13状态栏API变更兼容, 安全区域获取;
+  
                        DESC
 
   s.homepage         = 'https://github.com/heyupeng/HYPCategory'
@@ -38,5 +55,5 @@ TODO: Add long description of the pod here.
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'Enumability', '~> 1.0.0'
+  s.dependency 'Enumability', '~> 1.0.1'
 end
