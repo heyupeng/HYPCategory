@@ -13,6 +13,9 @@
 #import "NSString+YPHexString.h"
 #import "NSData+YPHexString.h"
 
+/* Encrypt and Decrypt */
+#import "NSData+YPCrypt.h"
+
 #import "NSString+YPMessageDigest.h"
 #import "NSString+YPNumberBaseConversion.h"
 
