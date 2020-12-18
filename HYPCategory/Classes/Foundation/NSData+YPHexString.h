@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  数据流转数字 <0643> => 1603
  */
+- (int)yp_hexIntValue;
+
 - (NSInteger)yp_hexIntegerValue;
 
 - (long long)yp_hexLongLongValue;

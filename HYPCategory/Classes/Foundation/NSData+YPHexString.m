@@ -38,11 +38,38 @@
     return mdata;
 }
 
+/**
+ @Summary
+ hexString
+ @Discussion
+ 通过 `data.description` 去除修边字符"<>" 与间隔字符" " 获取 hexString。
+ 
+ iOS 13 `data.description` 输出结果发生变化，不再适用。使用 `data.debugDescription` 代替。
+ 
+ @code
+ // iOS 13 data.description 输出结果发生变化:
+ // - iOS 13 前: <7812548e c632ae85>
+ // - iOS 13 后: {length = 8, bytes = 0x7812548ec632ae85}
+ 
+ NSString * string;
+ if (@available(iOS 13.0, *)) { string = self.debugDescription;}
+ else { string = self.description;}
+ /// 去除 <>
+ string = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+ /// 去除 space
+ string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
+ return string;
+ */
 - (NSString *)yp_hexStringByDescription {
-    NSString * string = self.debugDescription;// data.description;
-    // 去除 <>
+    NSString * string;
+    if (@available(iOS 13.0, *)) {
+        string = self.debugDescription;
+    } else {
+        string = self.description;
+    }
+    /// 去除 <>
     string = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    // 去除 space
+    /// 去除 space
     string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
     return string;
 }
@@ -62,8 +89,8 @@
         UInt8 byte = bytes[i];
         [hexString appendFormat:@"%02x", byte];
     }
-    
-    return hexString;
+    // 某些设备存在HexString携带大写字母的问题，这里统一转换为小写。
+    return [hexString lowercaseString];
 }
 
 /**
@@ -100,18 +127,33 @@
     return array;
 }
 
+- (int)yp_hexIntValue {
+    Byte * bytes = (Byte *)[self bytes];
+    NSUInteger length = [self length];
+    
+    size_t l = 4 ;// sizeof(int);
+    int start = (int)(length-l>0? length-l: 0);
+    
+    int value = 0;
+    for (int i = start; i < length; i ++) {
+        Byte byte = bytes[i];
+        value = (value << 8) + byte;
+    }
+    
+    return value;
+}
+
 - (NSInteger)yp_hexIntegerValue {
     Byte * bytes = (Byte *)[self bytes];
     NSInteger length = [self length];
     
+    size_t l = sizeof(NSInteger);
+    int start = (int)(length-l>0? length-l: 0);
+    
     NSInteger value = 0;
-    for (int i = 0; i < length; i ++) {
+    for (int i = start; i < length; i ++) {
         Byte byte = bytes[i];
         value = (value << 8) + byte;
-        
-        if ((value << 8) > NSIntegerMax) {
-            break;
-        }
     }
     
     return value;
@@ -120,15 +162,14 @@
 - (long long)yp_hexLongLongValue {
     Byte * bytes = (Byte *)[self bytes];
     NSInteger length = [self length];
-    long long  value = 0;
     
-    for (int i = 0; i < length; i ++) {
+    size_t l = sizeof(NSInteger);
+    int start = (int)(length-l>0? length-l: 0);
+    
+    long long  value = 0;
+    for (int i = start; i < length; i ++) {
         Byte byte = bytes[i];
         value = (value << 8) + byte;
-        
-        if ((value << 8) > LONG_LONG_MAX) {
-            break;
-        }
     }
     
     return value;
