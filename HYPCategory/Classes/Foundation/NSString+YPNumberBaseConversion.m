@@ -32,39 +32,23 @@
         hexString = [hexString substringFromIndex:2];
     }
     
-    NSMutableDictionary  *hexDict = [[NSMutableDictionary alloc] init];
-    [hexDict setObject:@"0000" forKey:@"0"];
-    [hexDict setObject:@"0001" forKey:@"1"];
-    [hexDict setObject:@"0010" forKey:@"2"];
-    [hexDict setObject:@"0011" forKey:@"3"];
-    [hexDict setObject:@"0100" forKey:@"4"];
-    [hexDict setObject:@"0101" forKey:@"5"];
-    [hexDict setObject:@"0110" forKey:@"6"];
-    [hexDict setObject:@"0111" forKey:@"7"];
-    [hexDict setObject:@"1000" forKey:@"8"];
-    [hexDict setObject:@"1001" forKey:@"9"];
-    [hexDict setObject:@"1010" forKey:@"a"];
-    [hexDict setObject:@"1011" forKey:@"b"];
-    [hexDict setObject:@"1100" forKey:@"c"];
-    [hexDict setObject:@"1101" forKey:@"d"];
-    [hexDict setObject:@"1110" forKey:@"e"];
-    [hexDict setObject:@"1111" forKey:@"f"];
+    NSDictionary  *hex2BinDict = @{
+        @"0": @"0000", @"1": @"0001", @"2": @"0010", @"3": @"0011",
+        @"4": @"0100", @"5": @"0101", @"6": @"0110", @"7": @"0111",
+        @"8": @"1000", @"9": @"1001", @"a": @"1010", @"b": @"1011",
+        @"c": @"1100", @"d": @"1101", @"e": @"1110", @"f": @"1111",
+    };
     
     NSMutableString *binaryString=[[NSMutableString alloc] init];
-    
+    NSRange range = NSMakeRange(0, 1);
     for (int i=0; i<[hexString length]; i++) {
-        
-        NSRange rage;
-        rage.length = 1;
-        rage.location = i;
-
-        NSString *key = [hexString substringWithRange:rage];
-        
-        [binaryString appendString:[hexDict objectForKey:key]];
+        range.location = i;
+        NSString *key = [hexString substringWithRange:range];
+        [binaryString appendString:[hex2BinDict objectForKey:key]];
     }
     
     // 去除前缀的0
-    NSRange range = [binaryString rangeOfString:@"1" options:NSNumericSearch];
+    range = [binaryString rangeOfString:@"1" options:NSNumericSearch];
     if (range.location != NSNotFound) {
         [binaryString deleteCharactersInRange:NSMakeRange(0, range.location)];
     }
@@ -91,18 +75,34 @@
     binaryString = [binaryString stringByReplacingOccurrencesOfString:@" " withString:@""];
     binaryString = [binaryString lowercaseString];
 
-//    if (binaryString.length % 4 != 0) {
-//        NSMutableString *b = [[NSMutableString alloc]init];;
-//        for (int i = 0; i < 4 - binaryString.length % 4; i++) {
-//            [b appendString:@"0"];
-//        }
-//
-//        binaryString = [b stringByAppendingString:binaryString];
-//    }
-    
+#if 0
     const char * cstr = [binaryString cStringUsingEncoding:NSUTF8StringEncoding];
     long value = strtol(cstr, nil, 2);
     return [NSString stringWithFormat:@"%lx",value];
+#else
+    int l = binaryString.length % 4;
+    if (l != 0) {
+        l = 4 - l;
+        NSString *supply = @"0000"; supply = [supply substringToIndex:l];
+        binaryString = [supply stringByAppendingString:binaryString];
+    }
+    
+    NSDictionary  *bin2hexDict = @{
+        @"0000": @"0", @"0001": @"1", @"0010": @"2", @"0011": @"3",
+        @"0100": @"4", @"0101": @"5", @"0110": @"6", @"0111": @"7",
+        @"1000": @"8", @"1001": @"9", @"1010": @"a", @"1011": @"b",
+        @"1100": @"c", @"1101": @"d", @"1110": @"e", @"1111": @"f",
+    };
+    
+    NSMutableString * hexString=[[NSMutableString alloc] init];
+    NSRange range = NSMakeRange(0, 4);
+    for (int i=0; i<[binaryString length]; i++) {
+        range.location = i;
+        NSString *key = [binaryString substringWithRange:range];
+        [hexString appendString:[bin2hexDict valueForKey:key]];
+    }
+    return hexString;
+#endif
 }
 
 /**
@@ -120,15 +120,6 @@
         decimal = decimal/2 ;
     }
     
-    // 不足四位补足
-//    if (bin.length % 4 != 0) {
-//        NSMutableString *b = [[NSMutableString alloc]init];;
-//        for (int i = 0; i < 4 - bin.length % 4; i++) {
-//            [b appendString:@"0"];
-//        }
-//
-//        bin = [b stringByAppendingString:bin];
-//    }
     return bin;
 }
 
@@ -138,41 +129,36 @@
 + (NSString *)hexStringByDecimalString:(NSString *)decimalString {
     long long decimal = [decimalString longLongValue];
     NSString * hex =@"";
-
+    
     // way 1
     hex = [NSString stringWithFormat:@"%llx", [decimalString longLongValue]];
     return hex;
     
     // way 2
-    uint16_t quotient;
-    NSString *qLetterValue;
+    uint32_t quotient;
+    NSString *qLetter;
     
-    for (int i = 0; i<9; i++) {
+    if (decimal < 0) {
+        quotient = decimal % 16;
+        decimal = quotient;
+    }
+    
+    do {
         quotient = decimal % 16;
         decimal = decimal / 16;
         switch (quotient) {
-            case 10:
-                qLetterValue =@"a";break;
-            case 11:
-                qLetterValue =@"b";break;
-            case 12:
-                qLetterValue =@"c";break;
-            case 13:
-                qLetterValue =@"d";break;
-            case 14:
-                qLetterValue =@"e";break;
-            case 15:
-                qLetterValue =@"f";break;
-            default:
-                qLetterValue = [NSString stringWithFormat:@"%u",quotient];
+            case 10: qLetter =@"a"; break;
+            case 11: qLetter =@"b"; break;
+            case 12: qLetter =@"c"; break;
+            case 13: qLetter =@"d"; break;
+            case 14: qLetter =@"e"; break;
+            case 15: qLetter =@"f"; break;
+            default: qLetter = [NSString stringWithFormat:@"%u",quotient];
                 
         }
-        hex = [qLetterValue stringByAppendingString:hex];
-        if (decimal == 0) {
-            break;
-        }
-        
-    }
+        hex = [qLetter stringByAppendingString:hex];
+    } while (decimal != 0);
+    
     return hex;
 }
 
