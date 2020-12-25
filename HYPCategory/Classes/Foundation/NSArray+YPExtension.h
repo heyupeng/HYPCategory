@@ -10,9 +10,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// 数组边界内对象
 @interface NSArray<ObjectType> (YPExtension)
 
-- (ObjectType)yp_objectAtIndex:(NSInteger)index;
+/// 返回数组闭环内索引处的对象。
+/// Object at index in closed-loop
+- (ObjectType)yp_objectAtIndexInLoop:(NSInteger)index;
+
+/// 防越界处理。
+/// Object at index in safe bound.
+- (ObjectType)yp_objectAtIndexSafely:(NSInteger)index;
 
 @end
 
