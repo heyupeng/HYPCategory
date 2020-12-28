@@ -41,8 +41,6 @@ FOUNDATION_EXPORT const NSDateFromatKey NSDateFormatTimeKey;
 
 - (NSString *)yp_description;
 
-- (NSString *)yp_short_description;
-
 @end
 
 

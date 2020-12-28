@@ -17,8 +17,8 @@ void decToBin(int num, char *buffer) {
     }
 }
 
-// 16进制字符串转二进制数据流
-- (NSData *)yp_hexStringToBytes {
+// 16进制字符串转数据流
+- (NSData *)yp_hexStringToData {
     NSString *hexString = self;
     if ([hexString hasPrefix:@"0x"]) {
         hexString = [hexString substringFromIndex:2];
@@ -30,10 +30,10 @@ void decToBin(int num, char *buffer) {
         return nil;
     }
     
-    NSMutableData* bytes=[NSMutableData data];
+    NSMutableData* data = [NSMutableData data];
     Byte byte = 0;
     for(int i=0;i<[hexString length];i++) {
-        unichar ch = [hexString characterAtIndex:i]; ////两位16进制数中的第一位(高位*16)
+        unichar ch = [hexString characterAtIndex:i];
         int value;
         if (ch >= '0' && ch <='9')
             value = ch - 48;    // '0' == 48
@@ -48,24 +48,24 @@ void decToBin(int num, char *buffer) {
         
         byte = byte * 16 + value;
         if (i%2 == 1) {
-            [bytes appendBytes:&byte length:1];
+            [data appendBytes:&byte length:1];
         }
     }
-    return bytes;
+    return data;
 }
 
 - (long)yp_hexStringToLongValue {
-    const char * cstr = [self cStringUsingEncoding:NSUTF8StringEncoding];
+    NSString * hex = [self stringByReplacingOccurrencesOfString:@" " withString:@""];
+    const char * cstr = [hex cStringUsingEncoding:NSUTF8StringEncoding];
     return strtol(cstr, nil, 16);
 }
 
-- (long)yp_hexValue {
+- (long)yp_hexLongValue {
     NSString * hexString = [self uppercaseString];
     if ([hexString rangeOfString:@" "].location != NSNotFound) {
         hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
     }
-    if ([hexString length]%2 != 0) {return 0;}
-        
+    
     long b = 0;
     for(int i=0;i<[hexString length];i++) {
         unichar ch = [hexString characterAtIndex:i]; ////两位16进制数中的第一位(高位*16)
@@ -84,8 +84,8 @@ void decToBin(int num, char *buffer) {
     return b;
 }
 
-// 16进制字符串转char字符串
-+ (NSString *)charStringFromHexString:(NSString *)hexString {
+// 16进制字符串转ASCII字符串
++ (NSString *)ASCIIStringFromHexString:(NSString *)hexString {
     NSString * str = @"";
 
     for (int i = 0; i < hexString.length; i+=2) {
@@ -98,30 +98,37 @@ void decToBin(int num, char *buffer) {
     return str;
 }
 
-// unichar字符串转16进制字符串
-+ (NSString *)hexStringFromCharString:(NSString *)string {
+// ASCII字符串转16进制字符串
++ (NSString *)hexStringFromASCIIString:(NSString *)string {
     NSString * str = @"";
     for (int i = 0; i < string.length; i++) {
         unichar ch = [string characterAtIndex:i];
         NSString * cs = [NSString stringWithFormat:@"%.2x",ch & 0xff];
         str = [str stringByAppendingString:cs];
     }
-    return str;
+    return [str lowercaseString];
 }
 
-- (NSString *)hexStringToCharString {
-    return [NSString charStringFromHexString:self];
+- (NSString *)hexStringToASCIIString {
+    return [NSString ASCIIStringFromHexString:self];
 }
 
-- (NSString *)charStringToHexString {
-    return [NSString hexStringFromCharString:self];
+- (NSString *)ASCIIStringToHexString {
+    return [NSString hexStringFromASCIIString:self];
 }
 
 @end
 
 
 @implementation NSString(YPHexReverse)
-// 16进制字符串的倒序 @"ade2" => @"e2ad" | @"ade23faa" => @"aa3fe2ad" | @"ade23faa55d3" => @"d355aa3fe2ad"
+
+/// 16进制字符串的倒序。
+///
+///  @"ade2" => @"e2ad" .
+///
+///  @"ade23faa" => @"aa3fe2ad" .
+///
+///  @"ade23faa55d3" => @"d355aa3fe2ad" .
 + (NSString *)hexStringReverse:(NSString *)hexString {
     if (hexString.length % 2 == 1) {
         return @"";

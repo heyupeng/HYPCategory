@@ -70,10 +70,6 @@ const NSDateFromatKey NSDateFormatTimeKey = @"HH:mm:ss";
     return [self yp_format:@"yyyy-MM-dd HH:mm:ss.SSS Z"];
 }
 
-- (NSString *)yp_short_description {
-    return [self yp_format:@"HH:mm:ss.SSS"];
-}
-
 @end
 
 

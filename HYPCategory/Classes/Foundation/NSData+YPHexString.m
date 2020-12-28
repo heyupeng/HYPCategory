@@ -22,7 +22,7 @@
     }
     
     if (hexString.length % 2 == 1) {
-        return nil;
+        hexString = [@"0" stringByAppendingString:hexString];
     }
     
     NSMutableData * mdata = [NSMutableData new];
@@ -132,7 +132,7 @@
     NSUInteger length = [self length];
     
     size_t l = 4 ;// sizeof(int);
-    int start = (int)(length-l>0? length-l: 0);
+    int start = (int)(length>l? length-l: 0);
     
     int value = 0;
     for (int i = start; i < length; i ++) {
@@ -145,10 +145,10 @@
 
 - (NSInteger)yp_hexIntegerValue {
     Byte * bytes = (Byte *)[self bytes];
-    NSInteger length = [self length];
+    NSUInteger length = [self length];
     
     size_t l = sizeof(NSInteger);
-    int start = (int)(length-l>0? length-l: 0);
+    int start = (int)(length>l? length-l: 0);
     
     NSInteger value = 0;
     for (int i = start; i < length; i ++) {

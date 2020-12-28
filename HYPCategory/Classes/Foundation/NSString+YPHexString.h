@@ -10,21 +10,27 @@
 
 @interface NSString (YPHexString)
 
-// 16进制字符串转二进制数据流 @"03000c0004000643" => <03000c00 04000643>
-- (NSData *)yp_hexStringToBytes;
+/// 16进制字符串转数据流 @"03000c0004000643" => <03000c00 04000643>
+- (NSData *)yp_hexStringToData;
 
 /// 16进制字符串转long型数字
 - (long)yp_hexStringToLongValue;
 
-// 16进制字符串转char字符串
-+ (NSString *)charStringFromHexString:(NSString *)hexString;
+/// 16进制字符串转long型数字
+- (long)yp_hexLongValue;
 
-// char字符串转16进制字符串
-+ (NSString *)hexStringFromCharString:(NSString *)string;
 
-- (NSString *)hexStringToCharString;
+/* 字符编码: 16进制字符串与ASCII字符串互换 */
 
-- (NSString *)charStringToHexString;
+/// 16进制字符串转ASCII字符串
++ (NSString *)ASCIIStringFromHexString:(NSString *)hexString;
+
+/// ASCII字符串转16进制字符串
++ (NSString *)hexStringFromASCIIString:(NSString *)string;
+
+- (NSString *)hexStringToASCIIString;
+
+- (NSString *)ASCIIStringToHexString;
 
 @end
 
@@ -34,7 +40,7 @@
  */
 @interface NSString (YPHexReverse)
 
-// 16进制字符串的倒序 @"ade2" => @"e2ad" | @"ade23faa" => @"aa3fe2ad" | @"ade23faa55d3" => @"d355aa3fe2ad"
+/// 16进制字符串的倒序。 @"ade2" => @"e2ad" | @"ade23faa" => @"aa3fe2ad" | @"ade23faa55d3" => @"d355aa3fe2ad"
 + (NSString *)hexStringReverse:(NSString *)hexString;
 
 - (NSString *)hexStringReverse;
