@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYPCategory'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'A short description of HYPCategory.'
 
 # This description is used to generate tags and improve search results.
@@ -25,9 +25,9 @@ Pod::Spec.new do |s|
  Geometry: 增加 CGPoint, CGSize, CGRect 几何计算函数;
  
 3. Foundation:
-  NSArray: 无越界处理,
+  NSArray: 防越界处理, 数组闭环索引处理；
   NSString: MD5编码, HexString, 数基转换（2、10、16进制）;
-  NSData: 数据流与16进制字符串的转换;
+  NSData: 数据流与16进制字符串的转换, Crypto加密解密;
   NSDate: 日期格式化的转换与输出, 日期组成零件;
 
 4. UIKit:
