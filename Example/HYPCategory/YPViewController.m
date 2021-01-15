@@ -8,8 +8,20 @@
 
 #import "YPViewController.h"
 #import <HYPCategory-umbrella.h>
+//#import <YPCategory.h>
 
-#import <YPCategory.h>
+@interface NSString (Debug)
+
+@end
+
+@implementation NSString (Debug)
+
+- (NSString *)debugDescription {
+    return [self stringByAppendingFormat:@"(length:%zi)", self.length];
+}
+
+@end
+
 @interface YPViewController ()
 
 @end
@@ -71,12 +83,12 @@
     NSString * key = @"123";
     NSData * data = [str dataUsingEncoding:NSUTF8StringEncoding];
     
-    NSData * encryptedData = [data yp_AES128EncryptedDataWithKey:key];
+    NSData * encryptedData = [data yp_encryptedDataUsingCAST:6 withKey:key];
     NSString * encrypted_base64String = [encryptedData base64EncodedStringWithOptions:0];
-    NSLog(@"\n Data: %@ \n encryptedData: %@ \n Base64String: %@",
-          data.hexString, encryptedData.yp_hexString, encrypted_base64String);
+    NSLog(@"\n Data: %@ \n encryptedData: %@ \n Base64String: %@ ",
+          data.hexString, encryptedData.yp_hexString.debugDescription, encrypted_base64String.debugDescription);
     
-    NSData * decryptedData = [encryptedData yp_AES128DecryptedDataWithKey:key];
+    NSData * decryptedData = [encryptedData yp_decryptedDataUsingCAST:6 withKey:key];
     NSString * decrypted_string = [[NSString alloc] initWithData:decryptedData  encoding:NSUTF8StringEncoding];
     NSLog(@"\n Data: %@ \n decryptedData: %@ \n decryptedString: %@",
           encryptedData.hexString, decryptedData.yp_hexString, decrypted_string);
