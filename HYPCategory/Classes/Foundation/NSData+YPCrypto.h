@@ -1,5 +1,5 @@
 //
-//  NSData+YPCrypt.h
+//  NSData+YPCrypto.h
 //  YPDemo
 //
 //  Created by Mac on 2020/12/18.
@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSData (yp_Crypt)
+@interface NSData (yp_Crypto)
 
 - (NSData *)yp_crypt:(CCOperation)cryptOp algorithm:(CCAlgorithm)algorithm keySize:(size_t)keySize blockSize:(size_t)blockSize WithKey:(NSString *)key;
 

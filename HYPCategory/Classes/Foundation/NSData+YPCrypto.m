@@ -1,14 +1,14 @@
 //
-//  NSData+YPCrypt.m
+//  NSData+YPCrypto.m
 //  YPDemo
 //
 //  Created by Mac on 2020/12/18.
 //  Copyright © 2020 heyupeng. All rights reserved.
 //
 
-#import "NSData+YPCrypt.h"
+#import "NSData+YPCrypto.h"
 
-@implementation NSData (yp_Crypt)
+@implementation NSData (yp_Crypto)
 
 - (NSData *)yp_crypt:(CCOperation)cryptOp algorithm:(CCAlgorithm)algorithm keySize:(size_t)keySize blockSize:(size_t)blockSize WithKey:(NSString *)key {
     NSData * data = self;
