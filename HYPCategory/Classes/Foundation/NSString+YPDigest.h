@@ -8,53 +8,24 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSString (yp_MD5)
+@interface NSString (yp_Digest)
 
-+ (NSString *)yp_md5:(NSString *)string;
+/* MD5 */
 - (NSString *)yp_md5;
 
-@end
-
-
-@interface NSString (yp_SHA1)
-
-+ (NSString *)yp_sha1: (NSString *)string;
-
+/* SHA1 */
 - (NSString *)yp_sha1;
 
-@end
-
-
-@interface NSString (yp_SHA224)
-
-+ (NSString *)yp_sha224: (NSString *)string;
-
+/* SHA224 */
 - (NSString *)yp_sha224;
-@end
 
-
-@interface NSString (yp_SHA256)
-
-+ (NSString *)yp_sha256: (NSString *)string;
-
+/* SHA256 */
 - (NSString *)yp_sha256;
 
-@end
-
-
-@interface NSString (yp_SHA384)
-
-+ (NSString *)yp_sha384: (NSString *)string;
-
+/* SHA384 */
 - (NSString *)yp_sha384;
 
-@end
-
-
-@interface NSString (yp_SHA512)
-
-+ (NSString *)yp_sha512: (NSString *)string;
-
+/* SHA512 */
 - (NSString *)yp_sha512;
 
 @end
