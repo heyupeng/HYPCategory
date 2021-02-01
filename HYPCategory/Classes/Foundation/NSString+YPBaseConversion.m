@@ -1,19 +1,20 @@
 //
-//  NSString+YPNumberBaseConversion.h
+//  NSString+YPBaseConversion.h
 //  YPDemo
 //
 //  Created by Peng on 2017/11/3.
 //  Copyright © 2017年 heyupeng. All rights reserved.
 //
 
-#import "NSString+YPNumberBaseConversion.h"
+#import "NSString+YPBaseConversion.h"
 
 @implementation NSString (YPNumberBaseConversion)
 
 /**
  Convert hex string to decimal string 16进制字符串转十进制字符串
  */
-+ (NSString *)decimalStringByHexString:(NSString *)hexString {
+- (NSString *)yp_hexToDec {
+    NSString * hexString = self;
     hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     const char * cstr = [hexString cStringUsingEncoding:NSUTF8StringEncoding];
@@ -24,7 +25,8 @@
 /**
  Convert hex string to binary string 16进制字符串转二进制字符串
  */
-+ (NSString *)binaryStringByHexString:(NSString *)hexString {
+- (NSString *)yp_hexToBin {
+    NSString * hexString = self;
     hexString = [hexString lowercaseString];
     hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
     
@@ -47,22 +49,30 @@
         [binaryString appendString:[hex2BinDict objectForKey:key]];
     }
     
-    // 去除前缀的0
-    range = [binaryString rangeOfString:@"1" options:NSNumericSearch];
+    return binaryString;
+}
+
+/**
+ Convert hex string to binary string 16进制字符串转二进制字符串（删除前缀0，首位必为1）。
+ */
+- (NSString *)yp_hexToBinWithoutPrefixZero {
+    NSMutableString * binaryString = (NSMutableString *)[self yp_hexToBin];
+    
+    /// 去除前缀 0；
+    NSRange range = [binaryString rangeOfString:@"1" options:NSNumericSearch];
     if (range.location != NSNotFound) {
         [binaryString deleteCharactersInRange:NSMakeRange(0, range.location)];
     }
-    //NSLog(@"转化后的二进制为:%@",binaryString);
     return binaryString;
 }
 
 /**
  Convert binary string to decimal string 二进制字符串转十进制字符串
  */
-+ (NSString *)decimalStringByBinaryString:(NSString *)binaryString {
+- (NSString *)yp_binToDec {
+    NSString * binaryString = self;
     binaryString = [binaryString stringByReplacingOccurrencesOfString:@" " withString:@""];
-    binaryString = [binaryString lowercaseString];
-
+    
     const char * cstr = [binaryString cStringUsingEncoding:NSUTF8StringEncoding];
     long value = strtol(cstr, nil, 2);
     return [NSString stringWithFormat:@"%ld",value];
@@ -71,7 +81,8 @@
 /**
  Convert binary string to hex string 二进制字符串转十六进制字符串
  */
-+ (NSString *)hexStringByBinaryString:(NSString *)binaryString {
+- (NSString *)yp_binToHex {
+    NSString * binaryString = self;
     binaryString = [binaryString stringByReplacingOccurrencesOfString:@" " withString:@""];
     binaryString = [binaryString lowercaseString];
 
@@ -96,7 +107,7 @@
     
     NSMutableString * hexString=[[NSMutableString alloc] init];
     NSRange range = NSMakeRange(0, 4);
-    for (int i=0; i<[binaryString length]; i++) {
+    for (int i=0; i<[binaryString length]; i+=4) {
         range.location = i;
         NSString *key = [binaryString substringWithRange:range];
         [hexString appendString:[bin2hexDict valueForKey:key]];
@@ -108,7 +119,8 @@
 /**
  Convert decimal string to binary string 十进制字符串转二进制字符串
  */
-+ (NSString *)decimalToBinary:(NSString *)decimalString {
+- (NSString *)yp_decToBin {
+    NSString * decimalString = self;
     long long decimal = [decimalString longLongValue];
     NSString *bin = @"";
 
@@ -126,7 +138,8 @@
 /**
  Convert decimal string to hex string 十进制字符串转十六进制字符串
  */
-+ (NSString *)hexStringByDecimalString:(NSString *)decimalString {
+- (NSString *)yp_decToHex {
+    NSString * decimalString = self;
     long long decimal = [decimalString longLongValue];
     NSString * hex =@"";
     
@@ -162,28 +175,32 @@
     return hex;
 }
 
+@end
+
+@implementation NSString (yp_NumberBaseConversion_Deprecate)
+
 - (NSString *)hexToDecimal {
-    return [NSString decimalStringByHexString:self];
+    return [self yp_hexToDec];
 }
 
 - (NSString *)hexToBinary {
-    return [NSString binaryStringByHexString:self];
+    return [self yp_hexToBin];
 }
 
 - (NSString *)decimalToHex {
-    return [NSString hexStringByDecimalString:self];
+    return [self yp_decToHex];
 }
 
 - (NSString *)decimalToBinary {
-    return [NSString decimalToBinary:self];
+    return [self yp_decToBin];
 }
 
 - (NSString *)binaryToHex {
-    return [NSString hexStringByBinaryString:self];
+    return [self yp_binToHex];
 }
 
 - (NSString *)binaryToDecimal {
-    return [NSString decimalStringByBinaryString:self];
+    return [self yp_binToDec];
 }
 
 @end

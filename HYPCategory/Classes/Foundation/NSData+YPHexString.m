@@ -8,7 +8,64 @@
 
 #import "NSData+YPHexString.h"
 
-@implementation NSData (YPHexString)
+@implementation NSData (yp_NSDataExtendedMethods)
+
+/**
+ 数据流反序。
+ @discussion <313233 616263> => <636261 333231>
+ */
+- (NSData *)yp_reverseData {
+    Byte * bytes = (Byte *)[self bytes];
+    NSInteger length = [self length];
+    NSMutableData * newData = [[NSMutableData alloc] initWithLength:length];
+    for (NSInteger i = length - 1; i > 0; i --) {
+        Byte byte = bytes[i];
+        [newData appendBytes:&byte length:1];
+    }
+    
+    return newData;
+}
+
+/**
+ 转码字符串。使用给定编码方式编码数据流 Data 。
+ @param encoding 给定编码方式
+ */
+- (NSString *)yp_stringUsingEncoding:(NSStringEncoding)encoding {
+    return [[NSString alloc] initWithData:self encoding:encoding];
+}
+
+/**
+ 转码UT8字符串。使用 NSUTF8StringEncoding 编码数据流 Data 。
+ @discussion <313233 616263> => <636261 333231>
+ */
+- (NSString *)yp_UTF8String {
+    return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
+}
+
+/**
+ 转码ASCII字符串。
+ @discussion <313233 616263> => 123abc
+ */
+- (NSString *)yp_ASCIIString {
+    return [[NSString alloc] initWithData:self encoding:NSASCIIStringEncoding];
+}
+
+//- (NSString *)yp_ASCIIString {
+//    Byte * bytes = (Byte *)[self bytes];
+//    NSInteger length = [self length];
+//
+//    NSMutableString * hexString = [[NSMutableString alloc] initWithCapacity:length];
+//    for (int i = 0; i < length; i ++) {
+//        UInt8 byte = bytes[i];
+//        [hexString appendFormat:@"%c", byte];
+//    }
+//
+//    return hexString;
+//}
+
+@end
+
+@implementation NSData (yp_HexString)
 
 + (NSData *)yp_dataWithHexString:(NSString *)hexString {
     hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -94,24 +151,8 @@
 }
 
 /**
- 数据流转ascii字符串 <313233 343561 626364> => 12345abcd
+ NSNumber类型集合。
  */
-- (NSString *)yp_ASCIIString {
-//    return [[NSString alloc] initWithData:self encoding:NSASCIIStringEncoding];
-    
-    Byte * bytes = (Byte *)[self bytes];
-    NSInteger length = [self length];
-    
-    NSMutableString * hexString = [[NSMutableString alloc] initWithCapacity:length];
-    
-    for (int i = 0; i < length; i ++) {
-        UInt8 byte = bytes[i];
-        [hexString appendFormat:@"%c", byte];
-    }
-    
-    return hexString;
-}
-
 - (NSArray<NSNumber *> *)yp_bytes {
     Byte * bytes = (Byte *)[self bytes];
     NSInteger length = [self length];

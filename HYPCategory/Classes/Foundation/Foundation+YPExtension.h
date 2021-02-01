@@ -17,7 +17,7 @@
 #import "NSData+YPCrypto.h"
 
 #import "NSString+YPDigest.h"
-#import "NSString+YPNumberBaseConversion.h"
+#import "NSString+YPBaseConversion.h"
 
 #import "NSArray+YPExtension.h"
 

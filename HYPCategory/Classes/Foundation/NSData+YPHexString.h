@@ -10,7 +10,25 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSData (YPHexString)
+@interface NSData (yp_NSDataExtensionMethods)
+
+/**
+ 数据流反序。 <313233 616263> => <636261 333231>
+ */
+- (NSData *)yp_reverseData;
+
+/**
+ 数据流转码字符串。
+ */
+- (NSString *)yp_stringUsingEncoding:(NSStringEncoding)encoding;
+
+- (NSString *)yp_ASCIIString;
+
+- (NSString *)yp_UTF8String;
+
+@end
+
+@interface NSData (yp_HexString)
 
 /**
  16进制字符串转数据流 @"03000c0004000643" => <03000c00 04000643>
@@ -22,11 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
  数据流转16进制字符串 <03000c00 04000643> => @"03000c0004000643"
  */
 - (NSString *)yp_hexString;
-
-/**
- 数据流转ascii字符串 <313233 343561 626364> => 12345abcd
- */
-- (NSString *)yp_ASCIIString;
 
 /**
  数据流转数组 <0643> => @[0x06, 0x43]

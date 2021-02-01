@@ -26,7 +26,7 @@ void decToBin(int num, char *buffer) {
     if ([hexString rangeOfString:@" "].location != NSNotFound) {
         hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
     }
-    if ([hexString length]%2!=0) {
+    if ([hexString length]%2 != 0) {
         return nil;
     }
     
@@ -85,9 +85,10 @@ void decToBin(int num, char *buffer) {
 }
 
 // 16进制字符串转ASCII字符串
-+ (NSString *)ASCIIStringFromHexString:(NSString *)hexString {
+- (NSString *)hexStringToASCIIString {
+    NSString * hexString = self;
+    
     NSString * str = @"";
-
     for (int i = 0; i < hexString.length; i+=2) {
         NSString * s = [hexString substringWithRange:NSMakeRange(i, 2)];
         const char * cstr = [s cStringUsingEncoding:NSUTF8StringEncoding];
@@ -99,22 +100,16 @@ void decToBin(int num, char *buffer) {
 }
 
 // ASCII字符串转16进制字符串
-+ (NSString *)hexStringFromASCIIString:(NSString *)string {
-    NSString * str = @"";
+- (NSString *)ASCIIStringToHexString {
+    NSString * string = self;
+    
+    NSString * hexString = @"";
     for (int i = 0; i < string.length; i++) {
         unichar ch = [string characterAtIndex:i];
-        NSString * cs = [NSString stringWithFormat:@"%.2x",ch & 0xff];
-        str = [str stringByAppendingString:cs];
+        NSString * s = [NSString stringWithFormat:@"%.2x",ch & 0xff];
+        hexString = [hexString stringByAppendingString:s];
     }
-    return [str lowercaseString];
-}
-
-- (NSString *)hexStringToASCIIString {
-    return [NSString ASCIIStringFromHexString:self];
-}
-
-- (NSString *)ASCIIStringToHexString {
-    return [NSString hexStringFromASCIIString:self];
+    return [hexString lowercaseString];
 }
 
 @end
@@ -129,21 +124,22 @@ void decToBin(int num, char *buffer) {
 ///  @"ade23faa" => @"aa3fe2ad" .
 ///
 ///  @"ade23faa55d3" => @"d355aa3fe2ad" .
-+ (NSString *)hexStringReverse:(NSString *)hexString {
+- (NSString *)hexStringReverse {
+    NSString * hexString = self;
+    
+    if ([hexString hasPrefix:@"0x"]) {
+        hexString = [hexString substringFromIndex:2];
+    }
     if (hexString.length % 2 == 1) {
         return @"";
     }
     
     NSString * string = @"";
-    for (int i = 0; i < hexString.length; i += 2) {
-        NSString * str1 = [hexString substringWithRange:NSMakeRange(hexString.length - 1 - 1 -i, 2)];
+    for (int i = 0, unitLength = 2; i < hexString.length; i += unitLength) {
+        NSString * str1 = [hexString substringWithRange:NSMakeRange(hexString.length - unitLength -i, unitLength)];
         string = [string stringByAppendingString: str1];
     }
     return string;
-}
-
-- (NSString *)hexStringReverse {
-    return  [NSString hexStringReverse:self];
 }
 
 @end

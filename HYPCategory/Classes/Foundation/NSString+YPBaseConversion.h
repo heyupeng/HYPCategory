@@ -1,5 +1,5 @@
 //
-//  NSString+YPNumberBaseConversion.h
+//  NSString+YPBaseConversion.h
 //  YPDemo
 //
 //  Created by Peng on 2017/11/3.
@@ -10,37 +10,43 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSString (YPNumberBaseConversion)
+@interface NSString (yp_BaseConversion)
 
 /**
  Convert hex to decimal 16进制字符串转十进制字符串
  */
-+ (NSString *)decimalStringByHexString:(NSString *)hexString;
+- (NSString *)yp_hexToDec;
 
 /**
  Convert hex to binary 16进制字符串转二进制字符串
  */
-+ (NSString *)binaryStringByHexString:(NSString *)hexString;
-
-/**
- Convert binary string to decimal string 二进制字符串转十进制字符串
- */
-+ (NSString *)decimalStringByBinaryString:(NSString *)binaryString;
+- (NSString *)yp_hexToBin;
+- (NSString *)yp_hexToBinWithoutPrefixZero;
 
 /**
  Convert binary string to hex string 二进制字符串转十六进制字符串
  */
-+ (NSString *)hexStringByBinaryString:(NSString *)binaryString;
+- (NSString *)yp_binToHex;
+
+/**
+ Convert binary string to decimal string 二进制字符串转十进制字符串
+ */
+- (NSString *)yp_binToDec;
 
 /**
  Convert decimal string to hex string 十进制字符串转十六进制字符串
  */
-+ (NSString *)hexStringByDecimalString:(NSString *)decimalString;
+- (NSString *)yp_decToHex;
 
 /**
  Convert decimal string to hex string 十进制字符串转二进制字符串
  */
-+ (NSString *)decimalToBinary:(NSString *)decimalString;
+- (NSString *)yp_decToBin;
+
+@end
+
+
+@interface NSString (yp_BaseConversion_Deprecate)
 
 - (NSString *)hexToDecimal;
 

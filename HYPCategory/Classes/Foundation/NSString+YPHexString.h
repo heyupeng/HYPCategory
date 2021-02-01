@@ -23,13 +23,9 @@
 /* 字符编码: 16进制字符串与ASCII字符串互换 */
 
 /// 16进制字符串转ASCII字符串
-+ (NSString *)ASCIIStringFromHexString:(NSString *)hexString;
-
-/// ASCII字符串转16进制字符串
-+ (NSString *)hexStringFromASCIIString:(NSString *)string;
-
 - (NSString *)hexStringToASCIIString;
 
+/// ASCII字符串转16进制字符串
 - (NSString *)ASCIIStringToHexString;
 
 @end
@@ -41,8 +37,6 @@
 @interface NSString (YPHexReverse)
 
 /// 16进制字符串的倒序。 @"ade2" => @"e2ad" | @"ade23faa" => @"aa3fe2ad" | @"ade23faa55d3" => @"d355aa3fe2ad"
-+ (NSString *)hexStringReverse:(NSString *)hexString;
-
 - (NSString *)hexStringReverse;
 
 @end
