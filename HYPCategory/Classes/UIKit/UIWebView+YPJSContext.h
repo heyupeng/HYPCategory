@@ -14,9 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 UIKIT_EXTERN NSString *const kUIWebViewJSContext;
 
 UIKIT_EXTERN API_DEPRECATED("No longer supported; please adopt WKWebView.", ios(2.0, 12.0)) API_UNAVAILABLE(tvos, macos)
-@interface UIWebView (YPJSContext)
+@interface UIWebView (yp_JSContext)
+
 //获取JS的运行环境
-- (JSContext *)yp_jsContext;
+- (JSContext *)yp_JSContext;
+
+- (void)yp_addJSInterface:(NSString *)name target:(id)target;
+
+- (void)yp_addJSInterface:(NSString *)name handler:(void(^)(NSArray * params))handler;
 
 @end
 
