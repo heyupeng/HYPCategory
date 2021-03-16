@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYPCategory'
-  s.version          = '1.0.2'
+  s.version          = '1.0.3'
   s.summary          = 'A short description of HYPCategory.'
 
 # This description is used to generate tags and improve search results.
@@ -47,7 +47,23 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'HYPCategory/Classes/**/*'
+  #s.source_files = 'HYPCategory/Classes/HYPCategory.h'
+  
+  s.subspec 'Foundation' do |ss|
+    ss.source_files = 'HYPCategory/Classes/Foundation/*.{h,m}'
+  end
+  
+  s.subspec 'CoreGraphics' do |ss|
+    ss.source_files = 'HYPCategory/Classes/CoreGraphics/*.{h,m}'
+  end
+  
+  s.subspec 'UIKit' do |ss|
+    ss.source_files = 'HYPCategory/Classes/UIKit/*.{h,m}'
+  end
+  
+  s.subspec 'CoreBluetooth' do |ss|
+    ss.source_files = 'HYPCategory/Classes/CoreBluetooth+Extension/*.{h,m}'
+  end
   
   # s.resource_bundles = {
   #   'HYPCategory' => ['HYPCategory/Assets/*.png']
