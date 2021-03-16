@@ -68,16 +68,15 @@
 @implementation NSData (yp_HexString)
 
 + (NSData *)yp_dataWithHexString:(NSString *)hexString {
-    hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
     if ([hexString hasPrefix:@"0x"]) {
         hexString = [hexString substringFromIndex:2];
     }
-    
     if ([hexString hasPrefix:@"#"]) {
         hexString = [hexString substringFromIndex:1];
     }
-    
+    if ([hexString containsString:@" "]) {
+        hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    }
     if (hexString.length % 2 == 1) {
         hexString = [@"0" stringByAppendingString:hexString];
     }
@@ -116,6 +115,7 @@
  /// 去除 space
  string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
  return string;
+ @endcode
  */
 - (NSString *)yp_hexStringByDescription {
     NSString * string;
@@ -172,10 +172,26 @@
     Byte * bytes = (Byte *)[self bytes];
     NSUInteger length = [self length];
     
+    int value = 0;
     size_t l = 4 ;// sizeof(int);
     int start = (int)(length>l? length-l: 0);
     
-    int value = 0;
+    for (int i = start; i < length; i ++) {
+        Byte byte = bytes[i];
+        value = (value << 8) + byte;
+    }
+    
+    return value;
+}
+
+- (long)yp_hexLongValue {
+    Byte * bytes = (Byte *)[self bytes];
+    NSUInteger length = [self length];
+    
+    long  value = 0;
+    size_t l = sizeof(long);
+    int start = (int)(length>l? length-l: 0);
+    
     for (int i = start; i < length; i ++) {
         Byte byte = bytes[i];
         value = (value << 8) + byte;
@@ -188,10 +204,10 @@
     Byte * bytes = (Byte *)[self bytes];
     NSUInteger length = [self length];
     
+    NSInteger value = 0;
     size_t l = sizeof(NSInteger);
     int start = (int)(length>l? length-l: 0);
     
-    NSInteger value = 0;
     for (int i = start; i < length; i ++) {
         Byte byte = bytes[i];
         value = (value << 8) + byte;
@@ -202,12 +218,12 @@
 
 - (long long)yp_hexLongLongValue {
     Byte * bytes = (Byte *)[self bytes];
-    NSInteger length = [self length];
-    
-    size_t l = sizeof(NSInteger);
-    int start = (int)(length-l>0? length-l: 0);
+    NSUInteger length = [self length];
     
     long long  value = 0;
+    size_t l = sizeof(value);
+    int start = (int)(length>l? length-l: 0);
+    
     for (int i = start; i < length; i ++) {
         Byte byte = bytes[i];
         value = (value << 8) + byte;

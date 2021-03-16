@@ -51,6 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (int)yp_hexIntValue;
 
+- (long)yp_hexLongValue;
+
 - (NSInteger)yp_hexIntegerValue;
 
 - (long long)yp_hexLongLongValue;

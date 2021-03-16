@@ -17,9 +17,9 @@
 
 @implementation NSString (Debug)
 
-- (NSString *)debugDescription {
-    return [self stringByAppendingFormat:@"(len=%zi)", self.length];
-}
+//- (NSString *)debugDescription {
+//    return [self stringByAppendingFormat:@"(len=%zi)", self.length];
+//}
 
 @end
 
@@ -72,7 +72,7 @@
     NSData * data = [NSData yp_dataWithHexString:hex];
     
     NSInteger intger = [data yp_hexIntegerValue];
-    long long longlong = [data yp_hexLongLongValue];
+    long long longlong = [data yp_hexLongValue];
     int i = [data yp_hexIntValue];
     NSString * hex1 = [data yp_hexString];
     

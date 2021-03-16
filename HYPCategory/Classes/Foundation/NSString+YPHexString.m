@@ -10,11 +10,18 @@
 
 @implementation NSString (YPHexString)
 
-void decToBin(int num, char *buffer) {
-    if(num>0) {
-        decToBin(num/2,buffer+1);
-        *buffer = (char)(num%2+48);
-    }
+char __base16EncodeLookup__(int value) {
+    char * base16 = "0123456789abcdef";
+    if (value >= 0 && value < 16) { return base16[value]; }
+    return 0;
+}
+
+int __base16DecodeLookup__(unichar ch) {
+    int value = 17;
+    if (ch >= '0' && ch <='9') value = ch - 48;    // '0' == 48
+    else if (ch >= 'A' && ch <='F') value = ch - 'A' + 10;    // 'A' == 65
+    else if (ch >= 'a' && ch <= 'f') value = ch - 'a' + 10;  // 'a' == 97
+    return value;
 }
 
 // 16进制字符串转数据流
@@ -23,26 +30,22 @@ void decToBin(int num, char *buffer) {
     if ([hexString hasPrefix:@"0x"]) {
         hexString = [hexString substringFromIndex:2];
     }
+    if ([hexString hasPrefix:@"#"]) {
+        hexString = [hexString substringFromIndex:1];
+    }
     if ([hexString rangeOfString:@" "].location != NSNotFound) {
         hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
     }
     if ([hexString length]%2 != 0) {
-        return nil;
+        hexString = [@"0" stringByAppendingString:hexString];
     }
     
     NSMutableData* data = [NSMutableData data];
     Byte byte = 0;
     for(int i=0;i<[hexString length];i++) {
         unichar ch = [hexString characterAtIndex:i];
-        int value;
-        if (ch >= '0' && ch <='9')
-            value = ch - 48;    // '0' == 48
-        else if (ch >= 'A' && ch <='F')
-            value = ch - 'A' + 10;    // 'A' == 65
-        else if (ch >= 'a' && ch <= 'f')
-            value = ch - 'a' + 10;  // 'a' == 97
-        else
-            break;;
+        int value = __base16DecodeLookup__(ch);
+        if (value > 16) { break; }
         
         if (i%2 == 0) byte = 0;
         
@@ -68,17 +71,9 @@ void decToBin(int num, char *buffer) {
     
     long b = 0;
     for(int i=0;i<[hexString length];i++) {
-        unichar ch = [hexString characterAtIndex:i]; ////两位16进制数中的第一位(高位*16)
-        int value;
-        if (ch >= '0' && ch <='9')
-            value = ch - 48;    // '0' == 48
-        else if (ch >= 'A' && ch <='F')
-            value = ch - 'A' + 10;    // 'A' == 65
-        else if (ch >= 'a' && ch <= 'f')
-            value = ch - 'a' + 10;  // 'a' == 97
-        else
-            break;
-        
+        unichar ch = [hexString characterAtIndex:i];
+        int value = __base16DecodeLookup__(ch);
+        if (value > 16) { break; }
         b = b * 16 + value;
     }
     return b;

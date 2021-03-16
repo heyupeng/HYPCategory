@@ -10,6 +10,14 @@
 
 @implementation NSString (YPNumberBaseConversion)
 
+void decToBin(int num, char *buffer, int * len) {
+    if(num>0) {
+        decToBin(num/2,buffer+1, len);
+        *buffer = (char)(num%2+48);
+        *len += 1;
+    }
+}
+
 /**
  Convert hex string to decimal string 16进制字符串转十进制字符串
  */
@@ -140,14 +148,21 @@
  */
 - (NSString *)yp_decToHex {
     NSString * decimalString = self;
-    long long decimal = [decimalString longLongValue];
     NSString * hex =@"";
     
     // way 1
     hex = [NSString stringWithFormat:@"%llx", [decimalString longLongValue]];
+    if (![hex isEqualToString:[self yp_decToHex1]]) {
+        NSLog(@"⚠️ decToHex: %@ => %@ != %@", decimalString, hex, [self yp_decToHex1]);
+    }
     return hex;
-    
-    // way 2
+}
+
+- (NSString *)yp_decToHex1 {
+    NSString * decimalString = self;
+    long long decimal = [decimalString longLongValue];
+    NSString * hex =@"";
+
     uint32_t quotient;
     NSString *qLetter;
     
@@ -156,19 +171,14 @@
         decimal = quotient;
     }
     
+    char hexLookup[16] = "0123456789abcdef";
     do {
         quotient = decimal % 16;
         decimal = decimal / 16;
-        switch (quotient) {
-            case 10: qLetter =@"a"; break;
-            case 11: qLetter =@"b"; break;
-            case 12: qLetter =@"c"; break;
-            case 13: qLetter =@"d"; break;
-            case 14: qLetter =@"e"; break;
-            case 15: qLetter =@"f"; break;
-            default: qLetter = [NSString stringWithFormat:@"%u",quotient];
-                
-        }
+        
+        char hexChar = hexLookup[quotient];
+        qLetter = [NSString stringWithFormat:@"%c", hexChar];
+        
         hex = [qLetter stringByAppendingString:hex];
     } while (decimal != 0);
     
