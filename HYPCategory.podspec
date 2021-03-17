@@ -47,7 +47,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  #s.source_files = 'HYPCategory/Classes/HYPCategory.h'
+  s.source_files = 'HYPCategory/Classes/YPCategory.h'
   
   s.subspec 'Foundation' do |ss|
     ss.source_files = 'HYPCategory/Classes/Foundation/*.{h,m}'
