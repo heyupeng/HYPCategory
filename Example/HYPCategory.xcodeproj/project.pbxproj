@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04F11B3825F0B6EA00FEF250 /* MathExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F11B3725F0B6E800FEF250 /* MathExtension.m */; };
+		04121051261319CD00910F58 /* Combinatorics.m in Sources */ = {isa = PBXBuildFile; fileRef = 0412104F261319CB00910F58 /* Combinatorics.m */; };
+		0412105E26131DBB00910F58 /* Equation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0412105D26131DBB00910F58 /* Equation.m */; };
+		0412106326131DC900910F58 /* Complex.m in Sources */ = {isa = PBXBuildFile; fileRef = 0412106226131DC800910F58 /* Complex.m */; };
+		04F11B3825F0B6EA00FEF250 /* Math+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F11B3725F0B6E800FEF250 /* Math+Extension.m */; };
 		1A5ED436CC7AA3D86584D53A /* Pods_HYPCategory_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F49038281A3678EE4D26DD17 /* Pods_HYPCategory_Example.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -38,8 +41,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		04F11B3625F0B6E800FEF250 /* MathExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathExtension.h; sourceTree = "<group>"; };
-		04F11B3725F0B6E800FEF250 /* MathExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MathExtension.m; sourceTree = "<group>"; };
+		0412104F261319CB00910F58 /* Combinatorics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Combinatorics.m; sourceTree = "<group>"; };
+		04121050261319CC00910F58 /* Combinatorics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Combinatorics.h; sourceTree = "<group>"; };
+		0412105C26131DBA00910F58 /* Equation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equation.h; sourceTree = "<group>"; };
+		0412105D26131DBB00910F58 /* Equation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Equation.m; sourceTree = "<group>"; };
+		0412106126131DC800910F58 /* Complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Complex.h; sourceTree = "<group>"; };
+		0412106226131DC800910F58 /* Complex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Complex.m; sourceTree = "<group>"; };
+		04F11B3625F0B6E800FEF250 /* Math+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Math+Extension.h"; sourceTree = "<group>"; };
+		04F11B3725F0B6E800FEF250 /* Math+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Math+Extension.m"; sourceTree = "<group>"; };
 		55AF7096328A7A4031F38296 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* HYPCategory_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HYPCategory_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -98,13 +107,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		04F11B4225F0E2C300FEF250 /* MathExtension */ = {
+		04F11B4225F0E2C300FEF250 /* Math+Extension */ = {
 			isa = PBXGroup;
 			children = (
-				04F11B3625F0B6E800FEF250 /* MathExtension.h */,
-				04F11B3725F0B6E800FEF250 /* MathExtension.m */,
+				04F11B3625F0B6E800FEF250 /* Math+Extension.h */,
+				04F11B3725F0B6E800FEF250 /* Math+Extension.m */,
+				04121050261319CC00910F58 /* Combinatorics.h */,
+				0412104F261319CB00910F58 /* Combinatorics.m */,
+				0412106126131DC800910F58 /* Complex.h */,
+				0412106226131DC800910F58 /* Complex.m */,
+				0412105C26131DBA00910F58 /* Equation.h */,
+				0412105D26131DBB00910F58 /* Equation.m */,
 			);
-			path = MathExtension;
+			path = "Math+Extension";
 			sourceTree = "<group>";
 		};
 		3318F7D1C00B9FE84D01BE15 /* Pods */ = {
@@ -122,7 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
-				04F11B4225F0E2C300FEF250 /* MathExtension */,
+				04F11B4225F0E2C300FEF250 /* Math+Extension */,
 				6003F593195388D20070C39A /* Example for HYPCategory */,
 				6003F5B5195388D20070C39A /* Tests */,
 				6003F58C195388D20070C39A /* Frameworks */,
@@ -406,9 +421,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* YPAppDelegate.m in Sources */,
-				04F11B3825F0B6EA00FEF250 /* MathExtension.m in Sources */,
+				0412105E26131DBB00910F58 /* Equation.m in Sources */,
+				04F11B3825F0B6EA00FEF250 /* Math+Extension.m in Sources */,
 				6003F5A7195388D20070C39A /* YPViewController.m in Sources */,
+				0412106326131DC900910F58 /* Complex.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				04121051261319CD00910F58 /* Combinatorics.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

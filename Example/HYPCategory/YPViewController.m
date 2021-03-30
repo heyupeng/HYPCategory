@@ -9,7 +9,7 @@
 #import "YPViewController.h"
 #import <HYPCategory-umbrella.h>
 //#import <YPCategory.h>
-#import "MathExtension.h"
+#import "Math+Extension.h"
 
 @interface NSString (Debug)
 

@@ -1,12 +1,12 @@
 //
-//  MathExtension.m
+//  Math+Extension.m
 //  HYPCategory_Example
 //
 //  Created by Mac on 2021/3/2.
 //  Copyright © 2021 heyupeng. All rights reserved.
 //
 
-#import "MathExtension.h"
+#import "Math+Extension.h"
 
 /// 浮点型采用IEEE754标准，float的小数部分可能有差。忽略 float 小数点后6位的影响。
 ///@discussion
@@ -17,13 +17,13 @@
 ///
 int isequaltozerof(float v) {
     if (v == 0.0) return 1;
-    if (ABS(v) < M_PROXIM_ZEROF * 0.5) return 1;
+    if (ABS(v) < M_APPROX_ZEROF * 0.5) return 1;
     return 0;
 }
 
 int isequaltozero(double v) {
     if (v == 0.0) return 1;
-    if (ABS(v) < M_PROXIM_ZERO * 0.5) return 1;
+    if (ABS(v) < M_APPROX_ZERO * 0.5) return 1;
     return 0;
 }
 
@@ -45,15 +45,17 @@ float correctf(float v, signed int p) {
 int compareff(float f1, float f2) {
     float d = f1 - f2;
     if (d == 0.0) return 0;
-    if (d > M_PROXIM_ZEROF) return 1;
-    if (d < -M_PROXIM_ZEROF) return -1;
+    if (d > M_APPROX_ZEROF) return 1;
+    if (d < -M_APPROX_ZEROF) return -1;
     
+    int signFlag = 1;
     if (d < 0) {
-        return -1 * compareff(f2, f1);
+        signFlag = -1;
     }
-    printf("FLOAT CORRECT: %f - %f = %f", f1, f2, d);
+    printf("float: %f - %f = %f", f1, f2, d);
+    d *= signFlag;
     
-    int c = d < M_PROXIM_ZEROF;
+    bool c = d < M_APPROX_ZEROF;
     int p = 0;
     while (c == 1) {
         if (d >= 1) { break;}
@@ -62,12 +64,13 @@ int compareff(float f1, float f2) {
     }
     
     if (p > 0) {
-        if (d > 4.5 && p <= 7) c = 0;
-        printf("%fE-%d ≠ 0", d, p);
-        printf(" => (精确到%f）≈ 0? %d", M_PROXIM_ZEROF, c);
+        printf(" = %c%fE-%d", (signFlag == 1? 0: '-'), d, p);
+        if (d > 5 && p <= 7) c = 0;
+        printf(" ≈ 0? %d (精确到%f)", c, M_APPROX_ZEROF);
     }
+    c = !c;
     printf("\n");
-    return c;
+    return c * signFlag;
 }
 
 /// 精确到小数点后p位比较两个float数值。
@@ -82,7 +85,7 @@ int compareffn(float f1, float f2, int p) {
     if (signFlag == -1 && d < correct) return -1;
     
     int c = 0;
-    c = ABS(d) < M_PROXIM_ZEROF;
+    c = ABS(d) < M_APPROX_ZEROF;
     printf("FLOAT: %f - %f = %f", f1, f2, d);
     printf(" == 0 ？%d => %d \n", f1 - f2 == 0.0, c);
     return c;
@@ -102,7 +105,7 @@ float asincosf(float s, float c) {
     float anglec = acos(c);
     float angle = 0;
     
-    if (s > M_PROXIM_ZEROF && c > M_PROXIM_ZEROF) {
+    if (s > M_APPROX_ZEROF && c > M_APPROX_ZEROF) {
         angle = angles;
     }
     else if (s > 0 && c < 0) {
@@ -115,11 +118,11 @@ float asincosf(float s, float c) {
         angle = angles;
     }
     
-    if (angles > M_PROXIM_ZEROF && anglec > M_PI_2) {
+    if (angles > M_APPROX_ZEROF && anglec > M_PI_2) {
 //        printf("第2象限 \n");
         angle = anglec;
     }
-    else if (angles > M_PROXIM_ZEROF && anglec > 0.0) {
+    else if (angles > M_APPROX_ZEROF && anglec > 0.0) {
 //        printf("第1象限 \n");
         angle = angles;
         if (angles > M_PI_2 * (1.0 *5/6)) {
@@ -127,7 +130,7 @@ float asincosf(float s, float c) {
             angle = anglec;
         }
     }
-    else if (angles < M_PROXIM_ZEROF && anglec < M_PI_2) {
+    else if (angles < M_APPROX_ZEROF && anglec < M_PI_2) {
 //        printf(" 第4象限 \n");
         angle = angles;
     }
