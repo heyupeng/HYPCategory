@@ -9,17 +9,17 @@
 #import "Complex.h"
 
 /// 求解一元二次方程 ax^2 + bx + c = 0。
-NSArray * quadraticEquation(float a, float b, float c);
+extern NSArray * quadraticEquation(float a, float b, float c);
 
 /// 求解一元三次方程 ax^3 + bx^2 + cx + d = 0。盛金公式法一元三次方程求根。
-NSArray * cubicEquationByShengjin(float a, float b, float c, float d);
+extern NSArray * cubicEquationByShengjin(float a, float b, float c, float d);
 
 /// 求解一元三次方程 ax^3 + bx^2 + cx + d = 0。卡丹公式法一元三次方程求根。
-NSArray * cubicEquationByCardano(float a, float b, float c, float d);
+extern NSArray * cubicEquationByCardano(float a, float b, float c, float d);
 
-NSArray * cubicEquationGeneral(float a, float b, float c,float d);
+extern NSArray * cubicEquationGeneral(float a, float b, float c,float d);
 
-NSArray * cubicEquation(float a, float b, float c,float d);
+extern NSArray * cubicEquation(float a, float b, float c,float d);
 
 #ifndef printfifdebug
 

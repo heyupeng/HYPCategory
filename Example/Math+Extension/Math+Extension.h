@@ -24,9 +24,9 @@ extern int isequaltozero(double);
 extern float correctf(float v, signed int p);
 
 /// 比较两个浮点型数值。
-extern int compareff(float f1, float f2);
+extern int fcomparef(float f1, float f2);
 /// 精确到小数点后n位比较两个float数值。
-extern int compareffn(float f1, float f2, int p);
+extern int fcomparefn(float f1, float f2, int p);
 
 extern float asincosf(float s, float c);
 

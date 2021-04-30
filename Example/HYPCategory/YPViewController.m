@@ -47,6 +47,35 @@
     [self hexConversionTests];
     
     [self SINTest];
+    
+    if ([self canOpenAppWithScheme:@"sushi"]) {
+        [self openAppWithScheme:@"sushi"];
+
+    }
+}
+
+/// 返回布尔值表示是否能通过给定scheme打开目标App。可以检查是否安装某App。
+- (BOOL)canOpenAppWithScheme:(NSString *)scheme {
+    NSString * urlString = [scheme stringByAppendingString:@"://"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return [[UIApplication sharedApplication] canOpenURL:url];
+}
+
+/// 通过给定scheme打开目标App。
+- (void)openAppWithScheme:(NSString *)scheme {
+    NSString * urlString = [scheme stringByAppendingString:@"://"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    if (@available(iOS 10.0, *)) {
+        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
+            
+        }];
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[UIApplication sharedApplication] openURL:url];
+#pragma clang diagnostic pop
+    }
 }
 
 - (void)digestTests {
@@ -374,7 +403,7 @@
 }
 
 - (void)SINTest {
-    for (float i = -M_PI; i <= M_PI; i += 0.1) {
+    for (float i = -M_PI; i <= M_PI; i += 0.05) {
         CGFloat aa = asincosf(sin(i), cos(i));
         NSLog(@"%f => %f  %d", i, aa, isequaltozerof(i-aa));
     }

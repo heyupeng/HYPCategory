@@ -8,6 +8,8 @@
 
 #import "UIDevice+YPSysInfo.h"
 #import <sys/utsname.h>
+#import <sys/sysctl.h>
+#import <CoreHaptics/CoreHaptics.h>
 
 @implementation UIDevice (yp_utsname)
 
@@ -229,5 +231,44 @@
     }
     return NO;
 }
+
+@end
+
+#if __has_include(<AdSupport/AdSupport.h>)
+#import <AdSupport/AdSupport.h>
+#endif
+#if __has_include(<AppTrackingTransparency/AppTrackingTransparency.h>)
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
+#endif
+
+@implementation UIDevice (yp_ExtensionMethods)
+
+#if __has_include(<AdSupport/AdSupport.h>)
+/// 广告标识符 advertisingIdentifier。iOS 14以上需配置info.plist授权描述，app store connect隐私信息。
+- (NSUUID *)yp_IDFA {
+    __block NSUUID * idfa = nil;
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    if (@available(iOS 14, *)) {
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            dispatch_semaphore_signal(sem);
+            if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
+                idfa = [[ASIdentifierManager sharedManager] advertisingIdentifier];
+            }
+            else if (status == ATTrackingManagerAuthorizationStatusDenied) {
+                NSLog(@"已拒绝IDFA授权");
+            }
+        }];
+        dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    } else {
+        // 使用原方式访问 IDFA
+        if ([[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled]) {
+            idfa = [[ASIdentifierManager sharedManager] advertisingIdentifier];
+        }
+    }
+    NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSSystemDomainMask, NO);
+    NSLog(@"IDFA: %@", idfa);
+    return idfa;
+}
+#endif
 
 @end

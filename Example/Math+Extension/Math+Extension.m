@@ -42,7 +42,7 @@ float correctf(float v, signed int p) {
 }
 
 /// 比较两个浮点型数值。
-int compareff(float f1, float f2) {
+int fcomparef(float f1, float f2) {
     float d = f1 - f2;
     if (d == 0.0) return 0;
     if (d > M_APPROX_ZEROF) return 1;
@@ -74,7 +74,7 @@ int compareff(float f1, float f2) {
 }
 
 /// 精确到小数点后p位比较两个float数值。
-int compareffn(float f1, float f2, int p) {
+int fcomparefn(float f1, float f2, int p) {
     float d = f1 - f2;
     int signFlag = 1;
     if (d == 0) return 0;

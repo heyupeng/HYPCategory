@@ -34,4 +34,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface UIDevice (yp_ExtensionMethods)
+
+#if __has_include(<AdSupport/AdSupport.h>)
+/// 广告标识符 IDFA (advertisingIdentifier)。
+- (NSUUID *)yp_IDFA;
+#endif
+
+@end
+
 NS_ASSUME_NONNULL_END

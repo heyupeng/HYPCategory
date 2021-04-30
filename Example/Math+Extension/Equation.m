@@ -247,7 +247,6 @@ NSArray * cubicEquationGeneral(float a, float b, float c,float d) {
 }
 
 NSArray * cubicEquation(float a, float b, float c,float d) {
-    ComplexOpenRootForNumber(-8, 2);
 #if 1
     return cubicEquationByShengjin(a, b, c, d);
 #else
