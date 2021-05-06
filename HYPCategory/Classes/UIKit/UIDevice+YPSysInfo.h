@@ -32,6 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否模拟器。
 - (BOOL)yp_isSimulator;
 
+/// 是否缺口屏。
+- (BOOL)yp_isNotchScreen;
+
+/// 是否iPhone7及以上的机型。
+- (BOOL)yp_isIPhone7OrAbove;
+
 @end
 
 
@@ -41,6 +47,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// 广告标识符 IDFA (advertisingIdentifier)。
 - (NSUUID *)yp_IDFA;
 #endif
+
+
+- (BOOL)yp_supportsHaptics;
+
+- (void)yp_feedback;
 
 @end
 

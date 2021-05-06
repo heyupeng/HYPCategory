@@ -8,8 +8,10 @@
 
 #import "UIDevice+YPSysInfo.h"
 #import <sys/utsname.h>
-#import <sys/sysctl.h>
+
 #import <CoreHaptics/CoreHaptics.h>
+
+#import "UIScreen+YPNotchScreen.h"
 
 @implementation UIDevice (yp_utsname)
 
@@ -26,8 +28,9 @@
 /// 型号标识与型号名称映射:  https://www.theiphonewiki.com/wiki/Models#iPhone
 @implementation UIDevice (yp_ModelName)
 
-/// 设备型号标识。从 `utsname` 读取，模拟器从`NSProcessInfo`读取。
+/// 设备型号标识。真机从 `utsname` 读取，模拟器从`NSProcessInfo`读取。
 - (NSString *)yp_modelIdentifier {
+    // 模拟器环境，utsname.machine 为 "i386"||"x86_64"，需要从 processInfo 读取。
     if (TARGET_OS_SIMULATOR) {
         NSProcessInfo * processInfo = [NSProcessInfo processInfo];
         NSDictionary * environment = processInfo.environment;
@@ -57,10 +60,6 @@
     else if ([identifier isEqualToString:@"AppleTV"]) {
         return [self AppleTVModelName:identifier];
     }
-    
-    // Simulator
-    if ([identifier isEqualToString:@"i386"] ||
-        [identifier isEqualToString:@"x86_64"]) return @"Simulator";
     
     return identifier;
 }
@@ -232,6 +231,23 @@
     return NO;
 }
 
+/// 是否缺口屏。
+- (BOOL)yp_isNotchScreen {
+    return [UIScreen.mainScreen yp_isNotchScreen];
+}
+
+/// 是否iPhone7及以上的机型。
+- (BOOL)yp_isIPhone7OrAbove {
+    /// >=  "iPhone9,1"
+    NSString * modelID = [self yp_modelIdentifier];
+    if (![modelID hasPrefix:@"iPhone"]) return NO;
+    modelID = [modelID substringFromIndex:6];
+    if ([modelID intValue] < 9) {
+        return NO;
+    }
+    return YES;
+}
+
 @end
 
 #if __has_include(<AdSupport/AdSupport.h>)
@@ -240,6 +256,8 @@
 #if __has_include(<AppTrackingTransparency/AppTrackingTransparency.h>)
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #endif
+
+#import <AudioToolbox/AudioToolbox.h>
 
 @implementation UIDevice (yp_ExtensionMethods)
 
@@ -271,4 +289,47 @@
 }
 #endif
 
+/// 普通短震 (3D Touch 中 Peek 震动反馈) 1519 ;
+/// 普通短震 (3D Touch 中 Pop 震动反馈) 1520 ;
+/// 连续三次短震 1521 ;
+
+int yp_kSystemSoundID_SMSReceived = 1003;
+int yp_kSystemSoundID_TouchPeek = 1519;
+int yp_kSystemSoundID_TouchPop = 1520;
+int yp_kSystemSoundID_3_ShortVibrate = 1520;
+
+/// 触觉硬件支持。
+- (BOOL)yp_supportsHaptics {
+    bool supportsHaptics = NO; // 触觉硬件支持
+    if (@available(iOS 13.0, *)) {
+        id <CHHapticDeviceCapability> hapticEngine = [CHHapticEngine capabilitiesForHardware];
+        supportsHaptics = [hapticEngine supportsHaptics];
+    }
+    else if (@available(iOS 10.0, *)) {
+        if ([self yp_isIPhone7OrAbove]) {
+            supportsHaptics = YES;
+        }
+    }
+    return supportsHaptics;
+}
+
+/// 触觉反馈。
+- (void)yp_feedback {
+    if (@available(iOS 10.0, *)) {
+        bool supportsHaptics = [self yp_supportsHaptics];
+        if (supportsHaptics) {
+            // 反馈发生器响应发生的要求:1.硬件支持（iPhone7及以上）；2.iOS 10及以上, 开启触觉支持；
+            static UIImpactFeedbackGenerator * feedbackGenerator;
+            if (!feedbackGenerator) {
+                feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+                [feedbackGenerator prepare];
+            }
+            [feedbackGenerator impactOccurred];
+            return;
+        }
+    }
+    
+    int sound = yp_kSystemSoundID_SMSReceived;
+    AudioServicesPlaySystemSound(sound);
+}
 @end

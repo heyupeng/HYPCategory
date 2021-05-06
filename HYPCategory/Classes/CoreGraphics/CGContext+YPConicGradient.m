@@ -10,45 +10,24 @@
 
 #import <CoreGraphics/CoreGraphics.h>
 
-CGFloat CGPointGetRadian_(CGPoint point) {
-    CGFloat theta = 0;
-    CGFloat dx, dy;
-    dx = point.x; dy = point.y;
-     
-    if (dx == 0) {
-     theta = dy > 0? M_PI_2 : -M_PI_2;
-     return theta;
-    }
-    
-    theta = atan(dy / dx);;
-    if (dx < 0) {
-     theta += M_PI;
-    }
-    return theta;
-}
-
-CGFloat __CGPointGetRadianWithCenterPoint(CGPoint point, CGPoint center) {
-    CGFloat dx = point.x - center.x;
-    CGFloat dy = point.y - center.y;
-    return CGPointGetRadian_(CGPointMake(dx, dy));
-}
+#import "CGGeometry+YPExtension.h"
 
 /// c= (1 - t ) * c1 + t * c2
-CGColorRef __CGColorCreateWithColorAndT(CGColorRef color1, CGColorRef color2, float t) {
-    const CGFloat * c1 = CGColorGetComponents(color1);
-    const CGFloat * c2 = CGColorGetComponents(color2);
+CGColorRef yp_CGColorCreateInterpolationWithProcess(CGColorRef c1, CGColorRef c2, float t) {
+    const CGFloat * cps1 = CGColorGetComponents(c1);
+    const CGFloat * cps2 = CGColorGetComponents(c2);
     
     CGFloat r, g, b,a;
-    r = (1-t) * c1[0] + t * c2[0];
-    g = (1-t) * c1[1] + t * c2[1];
-    b = (1-t) * c1[2] + t * c2[2];
-    a = (1-t) * c1[3] + t * c2[3];
+    r = (1-t) * cps1[0] + t * cps2[0];
+    g = (1-t) * cps1[1] + t * cps2[1];
+    b = (1-t) * cps1[2] + t * cps2[2];
+    a = (1-t) * cps1[3] + t * cps2[3];
     
     CGFloat c[] = {r,g,b,a};
     return CGColorCreate(CGColorSpaceCreateDeviceRGB(), c);
 }
 
-CGFloat CGColorGetDiffMaximumWithColor(CGColorRef color1, CGColorRef color2) {
+CGFloat yp_CGColorGetDiffMaximumWithColor(CGColorRef color1, CGColorRef color2) {
     const CGFloat * c1 = CGColorGetComponents(color1);
     const CGFloat * c2 = CGColorGetComponents(color2);
     
@@ -115,7 +94,7 @@ void yp_drawConicGradient(CGPoint startPoint, CGPoint endPoint, NSArray * colors
     bool isClosed = false; // 形成一个闭环渐变
 //    float ratio = 0.6; // 色彩保留占比值(色彩不渐变区与渐变区比值，[0, 1], 1则不存在渐变区域, 两色彩渐变区域大小为1-ratio
     
-    startAngle = __CGPointGetRadianWithCenterPoint(endPoint, startPoint);
+    startAngle = yp_CGPointGetAngleWithCenterPoint(endPoint, startPoint);
     radius = sqrtf(powf(startPoint.x - endPoint.x, 2) + powf(startPoint.y - endPoint.y, 2));;
     l = radius * angle;
     isClosed  = closed;
@@ -189,11 +168,11 @@ void yp_drawConicGradient(CGPoint startPoint, CGPoint endPoint, NSArray * colors
 #endif
         
         if ([color1 isKindOfClass:[UIColor class]]) {
-            CGColorRef colorRef = __CGColorCreateWithColorAndT(color1.CGColor, color2.CGColor, ct);
+            CGColorRef colorRef = yp_CGColorCreateInterpolationWithProcess(color1.CGColor, color2.CGColor, ct);
             CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), colorRef);
             CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), colorRef);
         } else {
-            CGColorRef colorRef = __CGColorCreateWithColorAndT((__bridge CGColorRef)color1, (__bridge CGColorRef)color2, ct);
+            CGColorRef colorRef = yp_CGColorCreateInterpolationWithProcess((__bridge CGColorRef)color1, (__bridge CGColorRef)color2, ct);
             CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), colorRef);
             CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), colorRef);
         }
@@ -217,7 +196,7 @@ void yp_drawConicGradientWithTwoColors(CGPoint startPoint, CGPoint endPoint, CGF
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGPoint dpoint = CGPointMake(endPoint.x - startPoint.x, endPoint.y - startPoint.y);
-    float startAngle = CGPointGetRadian_(dpoint);
+    float startAngle = yp_CGPointGetAngle(dpoint);
     float radius = sqrtf(powf(dpoint.x, 2) + powf(dpoint.y, 2));
     
     float l = radius * (angle);
@@ -230,7 +209,7 @@ void yp_drawConicGradientWithTwoColors(CGPoint startPoint, CGPoint endPoint, CGF
         CGFloat dAngle = t * angle;
         CGPoint point = CGPointMake(startPoint.x + radius * cos(startAngle + dAngle), startPoint.y + radius * sin(startAngle + dAngle));
         
-        CGColorRef colorRef = __CGColorCreateWithColorAndT(startColor, endColor, t);
+        CGColorRef colorRef = yp_CGColorCreateInterpolationWithProcess(startColor, endColor, t);
      
         CGContextMoveToPoint(context, startPoint.x, startPoint.y);
         CGContextAddLineToPoint(context, point.x, point.y);
