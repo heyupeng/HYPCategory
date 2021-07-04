@@ -22,7 +22,6 @@
         Byte byte = bytes[i];
         [newData appendBytes:&byte length:1];
     }
-    
     return newData;
 }
 
@@ -35,8 +34,8 @@
 }
 
 /**
- 转码UT8字符串。使用 NSUTF8StringEncoding 编码数据流 Data 。
- @discussion <313233 616263> => <636261 333231>
+ 转码UTF8字符串。使用 NSUTF8StringEncoding 编码数据流 Data 。
+ @discussion <313233 616263> => "123abc"
  */
 - (NSString *)yp_UTF8String {
     return [[NSString alloc] initWithData:self encoding:NSUTF8StringEncoding];
@@ -44,49 +43,53 @@
 
 /**
  转码ASCII字符串。
- @discussion <313233 616263> => 123abc
+ @discussion <313233 616263> => "123abc"
  */
 - (NSString *)yp_ASCIIString {
     return [[NSString alloc] initWithData:self encoding:NSASCIIStringEncoding];
 }
 
-//- (NSString *)yp_ASCIIString {
-//    Byte * bytes = (Byte *)[self bytes];
-//    NSInteger length = [self length];
-//
-//    NSMutableString * hexString = [[NSMutableString alloc] initWithCapacity:length];
-//    for (int i = 0; i < length; i ++) {
-//        UInt8 byte = bytes[i];
-//        [hexString appendFormat:@"%c", byte];
-//    }
-//
-//    return hexString;
-//}
-
 @end
 
 @implementation NSData (yp_HexString)
 
+/// 删除16进制字符串非法字符。
+NSString * yp_NSStringStandardizingHexDigit(NSString * hexString) {
+    NSString * hex = hexString;
+    if ([hex hasPrefix:@"0x"]) {
+        hex = [hex substringFromIndex:2];
+    }
+    else if ([hex hasPrefix:@"#"]) {
+        hex = [hex substringFromIndex:1];
+    }
+    
+    if ([hex rangeOfString:@" "].location != NSNotFound) {
+        hex = [hex stringByReplacingOccurrencesOfString:@" " withString:@""];
+    }
+    NSRange range = [hex rangeOfString:@"[0-9A-Fa-f]{1,}" options:NSRegularExpressionSearch];
+    if (range.location != NSNotFound && range.length != hex.length) {
+        hex = [hex substringWithRange:range];
+    }
+    
+    if ([hex length] % 2 == 1) {
+        hex = [@"0" stringByAppendingString:hex];
+    }
+    return hex;
+}
+
+/**
+ 16进制字符串转数据流。 @"03000c0004000643" => <03000c00 04000643>
+ 0.57 sec / 100,000
+ */
 + (NSData *)yp_dataWithHexString:(NSString *)hexString {
-    if ([hexString hasPrefix:@"0x"]) {
-        hexString = [hexString substringFromIndex:2];
-    }
-    if ([hexString hasPrefix:@"#"]) {
-        hexString = [hexString substringFromIndex:1];
-    }
-    if ([hexString containsString:@" "]) {
-        hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
-    }
-    if (hexString.length % 2 == 1) {
-        hexString = [@"0" stringByAppendingString:hexString];
-    }
+    hexString = yp_NSStringStandardizingHexDigit(hexString);
     
     NSMutableData * mdata = [NSMutableData new];
     // strtol() or 取字符ascii值计算
     for (int i = 0; i < hexString.length; i += 2) {
         NSRange range = NSMakeRange(i, 2);
-        NSString * str1 = [hexString substringWithRange:range];
-        const char * cstr = [str1 cStringUsingEncoding:NSUTF8StringEncoding];
+        NSString * substr = [hexString substringWithRange:range];
+        const char * cstr = [substr cStringUsingEncoding:NSUTF8StringEncoding];
         char ch = strtol(cstr, nil, 16);
         [mdata appendBytes:&ch length:1];
     }
@@ -95,29 +98,25 @@
 }
 
 /**
- @Summary
- hexString
- @Discussion
- 通过 `data.description` 去除修边字符"<>" 与间隔字符" " 获取 hexString。
- 
- iOS 13 `data.description` 输出结果发生变化，不再适用。使用 `data.debugDescription` 代替。
+ 数据流转16进制字符串。
+ @Discussion 通过 `data.description` 去除修边字符"<>" 与间隔字符" " 获取 hexString。
+ @Discussion iOS 13 `data.description` 输出结果发生变化，需使用 data.debugDescription 代替。
  
  @code
- // iOS 13 data.description 输出结果发生变化:
+ // iOS 13 data.description 输出结果发生变化，需使用 data.debugDescription 代替:
  // - iOS 13 前: <7812548e c632ae85>
  // - iOS 13 后: {length = 8, bytes = 0x7812548ec632ae85}
  
  NSString * string;
  if (@available(iOS 13.0, *)) { string = self.debugDescription;}
  else { string = self.description;}
- /// 去除 <>
+ 
  string = [string stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
- /// 去除 space
  string = [string stringByReplacingOccurrencesOfString:@" " withString:@""];
  return string;
  @endcode
  */
-- (NSString *)yp_hexStringByDescription {
+- (NSString *)yp_hexStringByTrimmingAndSpaceCharacter {
     NSString * string;
     if (@available(iOS 13.0, *)) {
         string = self.debugDescription;
@@ -132,10 +131,8 @@
 }
 
 /**
- 数据流转16进制字符串 <03000c00 04000643> => @"03000c0004000643"
- 
- iOS 13 data.description 输出结果有变化，通过data.description 去除修边字符"<>" 与间隔字符" " 获取hexString 的方法不再适用。或可使用data.debugDescription 代替data.description。
- */
+ 数据流转16进制字符串。 <03000c00 04000643> => @"03000c0004000643"
+*/
 - (NSString *)yp_hexString {
     Byte * bytes = (Byte *)[self bytes];
     NSInteger length = [self length];
@@ -200,22 +197,6 @@
     return value;
 }
 
-- (NSInteger)yp_hexIntegerValue {
-    Byte * bytes = (Byte *)[self bytes];
-    NSUInteger length = [self length];
-    
-    NSInteger value = 0;
-    size_t l = sizeof(NSInteger);
-    int start = (int)(length>l? length-l: 0);
-    
-    for (int i = start; i < length; i ++) {
-        Byte byte = bytes[i];
-        value = (value << 8) + byte;
-    }
-    
-    return value;
-}
-
 - (long long)yp_hexLongLongValue {
     Byte * bytes = (Byte *)[self bytes];
     NSUInteger length = [self length];
@@ -232,10 +213,30 @@
     return value;
 }
 
+- (NSInteger)yp_hexIntegerValue {
+    Byte * bytes = (Byte *)[self bytes];
+    NSUInteger length = [self length];
+    
+    NSInteger value = 0;
+    size_t l = sizeof(NSInteger);
+    int start = (int)(length>l? length-l: 0);
+    
+    for (int i = start; i < length; i ++) {
+        Byte byte = bytes[i];
+        value = (value << 8) + byte;
+    }
+    
+    return value;
+}
+
 @end
 
 
 @implementation NSData (yp_hexString_deprecate_1_0)
+
+- (NSString *)ASCIIString {
+    return [self yp_ASCIIString];
+}
 
 + (NSData *)dataWithHexString:(NSString *)hexString {
     return [self yp_dataWithHexString:hexString];
@@ -243,10 +244,6 @@
 
 - (NSString *)hexString {
     return [self yp_hexString];
-}
-
-- (NSString *)ASCIIString {
-    return [self yp_ASCIIString];
 }
 
 - (NSArray<NSNumber *> *)hexArray {

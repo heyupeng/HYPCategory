@@ -53,19 +53,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (long)yp_hexLongValue;
 
-- (NSInteger)yp_hexIntegerValue;
-
 - (long long)yp_hexLongLongValue;
+
+- (NSInteger)yp_hexIntegerValue;
 
 @end
 
 @interface NSData (yp_hexString_deprecate_1_0)
 
+- (NSString *)ASCIIString;
+
 + (NSData *)dataWithHexString:(NSString *)hexString;
 
 - (NSString *)hexString;
-
-- (NSString *)ASCIIString;
 
 - (NSArray<NSNumber *> *)hexArray;
 

@@ -8,6 +8,18 @@
 
 #import "NSString+YPHexString.h"
 
+@implementation NSString (yp_NSStringExtensionMethods)
+
+/// 删除空格字符。
+- (NSString *)yp_stringByRemovingSpace {
+    if ([self rangeOfString:@" "].location != NSNotFound) {
+        return [self stringByReplacingOccurrencesOfString:@" " withString:@""];
+    }
+    return self;
+}
+
+@end
+
 @implementation NSString (YPHexString)
 
 char __base16EncodeLookup__(int value) {
@@ -24,21 +36,31 @@ int __base16DecodeLookup__(unichar ch) {
     return value;
 }
 
+/// 删除16进制字符串多余字符。
+- (NSString *)yp_stringByStandardizingHexDigit {
+    NSString * hex = self;
+    if ([hex hasPrefix:@"0x"]) {
+        hex = [hex substringFromIndex:2];
+    }
+    if ([hex hasPrefix:@"#"]) {
+        hex = [hex substringFromIndex:1];
+    }
+    if ([hex rangeOfString:@" "].location != NSNotFound) {
+        hex = [hex yp_stringByRemovingSpace];
+    }
+    NSRange range = [hex rangeOfString:@"[0-9A-Fa-f]{1,}" options:NSRegularExpressionSearch];
+    if (range.location != NSNotFound && range.length != hex.length) {
+        hex = [hex substringWithRange:range];
+    }
+    if ([hex length] % 2 == 1) {
+        hex = [@"0" stringByAppendingString:hex];
+    }
+    return hex;
+}
+
 // 16进制字符串转数据流
 - (NSData *)yp_hexStringToData {
-    NSString *hexString = self;
-    if ([hexString hasPrefix:@"0x"]) {
-        hexString = [hexString substringFromIndex:2];
-    }
-    if ([hexString hasPrefix:@"#"]) {
-        hexString = [hexString substringFromIndex:1];
-    }
-    if ([hexString rangeOfString:@" "].location != NSNotFound) {
-        hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
-    }
-    if ([hexString length]%2 != 0) {
-        hexString = [@"0" stringByAppendingString:hexString];
-    }
+    NSString *hexString = [self yp_stringByStandardizingHexDigit];
     
     NSMutableData* data = [NSMutableData data];
     Byte byte = 0;
@@ -55,28 +77,6 @@ int __base16DecodeLookup__(unichar ch) {
         }
     }
     return data;
-}
-
-- (long)yp_hexStringToLongValue {
-    NSString * hex = [self stringByReplacingOccurrencesOfString:@" " withString:@""];
-    const char * cstr = [hex cStringUsingEncoding:NSUTF8StringEncoding];
-    return strtol(cstr, nil, 16);
-}
-
-- (long)yp_hexLongValue {
-    NSString * hexString = [self uppercaseString];
-    if ([hexString rangeOfString:@" "].location != NSNotFound) {
-        hexString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
-    }
-    
-    long b = 0;
-    for(int i=0;i<[hexString length];i++) {
-        unichar ch = [hexString characterAtIndex:i];
-        int value = __base16DecodeLookup__(ch);
-        if (value > 16) { break; }
-        b = b * 16 + value;
-    }
-    return b;
 }
 
 // 16进制字符串转ASCII字符串
@@ -107,18 +107,29 @@ int __base16DecodeLookup__(unichar ch) {
     return [hexString lowercaseString];
 }
 
-@end
+- (long)yp_hexStringToLongValue {
+    NSString * hex = [self yp_stringByStandardizingHexDigit];
+    const char * cstr = [hex cStringUsingEncoding:NSUTF8StringEncoding];
+    return strtol(cstr, nil, 16);
+}
 
-
-@implementation NSString(YPHexReverse)
+- (long)yp_hexLongValue {
+    NSString * hexString = [self yp_stringByStandardizingHexDigit];
+    
+    long b = 0;
+    for(int i=0;i<[hexString length];i++) {
+        unichar ch = [hexString characterAtIndex:i];
+        int value = __base16DecodeLookup__(ch);
+        if (value > 16) { break; }
+        b = b * 16 + value;
+    }
+    return b;
+}
 
 /// 16进制字符串的倒序。
-///
-///  @"ade2" => @"e2ad" .
-///
-///  @"ade23faa" => @"aa3fe2ad" .
-///
-///  @"ade23faa55d3" => @"d355aa3fe2ad" .
+///  @discussion "ade2" => @"e2ad" .
+///  @discussion "ade23faa" => @"aa3fe2ad" .
+///  @discussion "ade23faa55d3" => @"d355aa3fe2ad" .
 - (NSString *)hexStringReverse {
     NSString * hexString = self;
     
