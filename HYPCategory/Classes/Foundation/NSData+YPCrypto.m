@@ -10,15 +10,26 @@
 
 @implementation NSData (yp_Crypto)
 
+NSData *  NSDataCrypt( CCOperation op, CCAlgorithm alg, CCOptions options, const void *key, size_t keyLength, const void *iv, const void *dataIn, size_t dataInLength, void *dataOut, size_t dataOutAvailable, size_t *dataOutMoved) {
+    return nil;
+}
+
 - (NSData *)yp_crypt:(CCOperation)cryptOp algorithm:(CCAlgorithm)algorithm key:(NSString *)key keySize:(size_t)keySize blockSize:(size_t)blockSize error:(NSError **)error {
     NSData * data = self;
+    
+    char keyPtr[kCCKeySizeAES256+1];
+    bzero(keyPtr, sizeof(keyPtr));
+    [key getCString:keyPtr maxLength:sizeof(keyPtr) encoding:NSUTF8StringEncoding];
+    
+//    const char * keyPtr = [key cStringUsingEncoding:NSUTF8StringEncoding];
+    
     
     NSInteger length = blockSize + data.length;
     Byte * dataout = malloc(length);
     size_t moved = 0;
     
-    CCCryptorStatus status = CCCrypt(cryptOp, algorithm, 0xff,
-                                     key.UTF8String, keySize, nil,
+    CCCryptorStatus status = CCCrypt(cryptOp, algorithm, 0x03,
+                                     keyPtr, keySize, nil,
                                      data.bytes, data.length,
                                      dataout, length,
                                      &moved);

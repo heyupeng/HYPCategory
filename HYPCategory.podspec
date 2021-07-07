@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'HYPCategory'
-  s.version          = '1.0.3'
+  s.version          = '1.0.4'
   s.summary          = 'A short description of HYPCategory.'
 
 # This description is used to generate tags and improve search results.
@@ -63,6 +63,7 @@ Pod::Spec.new do |s|
   
   s.subspec 'CoreBluetooth' do |ss|
     ss.source_files = 'HYPCategory/Classes/CoreBluetooth+Extension/*.{h,m}'
+    ss.dependency 'Enumability', '~> 1.0.1'
   end
   
   # s.resource_bundles = {
@@ -71,5 +72,5 @@ Pod::Spec.new do |s|
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'Enumability', '~> 1.0.1'
+  
 end

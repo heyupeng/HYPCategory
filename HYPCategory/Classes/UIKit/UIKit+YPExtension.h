@@ -15,7 +15,7 @@
 
 #import "UIScreen+YPNotchScreen.h"
 
-#import "UIImage+YPResizableImage.h"
+#import "UIImage+Extension.h"
 
 #import "UITableView+Extension.h"
 #import "UIWebView+YPJSContext.h"
